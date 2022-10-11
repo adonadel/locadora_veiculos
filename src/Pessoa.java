@@ -1,7 +1,9 @@
 import java.time.LocalDate;
 
 public class Pessoa {
-    private long id;
+    private Long id;
     private LocalDate data_nasc;
-    private String cpf, rg, cnpj;
+    private String cpf, rg, cnpj, cnh, telefone, endereco;
+
+
 }
