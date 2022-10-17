@@ -1,8 +1,10 @@
-public class Veiculo<localdate> {
+import java.time.LocalDate;
+
+public class Veiculo{
 
     private long id;
     private float peso;
-    private localdate dataFabricacao;
+    private LocalDate dataFabricacao;
     private int numeroSerie;
     private double valorFipe;
     private double valorCompra;
@@ -10,7 +12,7 @@ public class Veiculo<localdate> {
     private String descricao;
     private String tipoCombustivel;
     private String placa;
-    private localdate ultimaRevisao;
+    private LocalDate ultimaRevisao;
     private float TrocaOleokm; //ultima troca em km (50.000 foi trocado o oleo)
 
 
