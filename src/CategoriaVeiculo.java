@@ -3,5 +3,6 @@ public class CategoriaVeiculo {
     private String nome;
     private String descricao;
     //de luxo ou normal ex...
+    //tentar transformar em ENUM
 
 }
