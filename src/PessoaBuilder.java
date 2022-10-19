@@ -4,8 +4,7 @@ public class PessoaBuilder {
             return new Funcionario();
         }else if(tipo.equals("Cliente")){
             return new Cliente();
-        }else {
-            return new Pessoa();
         }
+        return new Pessoa();
     }
 }

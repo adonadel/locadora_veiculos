@@ -83,4 +83,8 @@ public class Aluguel {
     public void setVeiculo(Veiculo veiculo) {
         this.veiculo = veiculo;
     }
+
+    public void alugar() {
+        
+    }
 }
