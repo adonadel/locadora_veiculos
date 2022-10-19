@@ -15,6 +15,7 @@ public class Veiculo{
     private LocalDate ultimaRevisao;
     private double pesoSuportado;
     private float TrocaOleokm; //ultima troca em km (50.000 foi trocado o oleo)
+    private Categoria categoria;
 
 
 
