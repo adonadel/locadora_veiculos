@@ -3,7 +3,7 @@ import java.time.LocalDate;
 public class Pessoa {
     private Long id;
     private LocalDate data_nasc;
-    private String cpf, rg, cnpj, telefone, endereco, cep;
+    private String cpf, rg, cnpj, telefone, endereco, cep, situacao, tipo;
 
     public Long getId() {
         return id;
@@ -67,5 +67,25 @@ public class Pessoa {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public String getSituacao() {
+        return situacao;
+    }
+
+    public void setSituacao(String situacao) {
+        this.situacao = situacao;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Pessoa() {
+        setTipo("Pessoa");
     }
 }
