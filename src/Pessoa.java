@@ -3,7 +3,8 @@ import java.time.LocalDate;
 public class Pessoa {
     private Long id;
     private LocalDate data_nasc;
-    private String cpf, rg, cnpj, telefone, endereco, cep, situacao, tipo;
+    private String cpf, rg, cnpj, telefone, endereco, cep, tipo, sexo;
+    private Boolean situacao;
 
     public Long getId() {
         return id;
@@ -69,11 +70,11 @@ public class Pessoa {
         this.cep = cep;
     }
 
-    public String getSituacao() {
+    public Boolean getSituacao() {
         return situacao;
     }
 
-    public void setSituacao(String situacao) {
+    public void setSituacao(Boolean situacao) {
         this.situacao = situacao;
     }
 
