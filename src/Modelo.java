@@ -13,6 +13,9 @@ public class Modelo {
     private BigDecimal precoMaximo;
     private String motor;
 
+    public Modelo() {
+    }
+
     public Modelo(Integer id, String nome, String classe, String carroceria, LocalDate producaoInicio, LocalDate producaoFim, Marca marca, BigDecimal precoMinimo, BigDecimal precoMaximo, String motor) {
         this.id = id;
         this.nome = nome;

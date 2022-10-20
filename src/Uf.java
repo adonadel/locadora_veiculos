@@ -1,6 +1,7 @@
 public class Uf {
     private long id;
     private String nome, sigla;
+    private Pais pais;
 
     public long getId() {
         return id;
@@ -24,5 +25,13 @@ public class Uf {
 
     public void setSigla(String sigla) {
         this.sigla = sigla;
+    }
+
+    public Pais getPais() {
+        return pais;
+    }
+
+    public void setPais(Pais pais) {
+        this.pais = pais;
     }
 }

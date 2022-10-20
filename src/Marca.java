@@ -12,6 +12,9 @@ public class Marca {
     private Boolean fabricaBrasil;
     private Boolean capitalAberto;
 
+    public Marca() {
+    }
+
     public Marca(Integer id, String razaoSocial, String logo, String slogan, LocalDate fundacao, String fundador, String sede, Integer empregados, Boolean fabricaBrasil, Boolean capitalAberto) {
         this.id = id;
         this.razaoSocial = razaoSocial;
