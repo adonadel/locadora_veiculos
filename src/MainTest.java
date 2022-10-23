@@ -1,3 +1,5 @@
+import model.*;
+
 public class MainTest {
     public static void main(String[] args) {
         /*
@@ -35,6 +37,6 @@ public class MainTest {
         Marca marca = new Marca();
         marca.setRazaoSocial("Ferrari");
 
-        Veiculo veiculo = VeiculoBuilder.criaVeiculo("Carro");
+//        Veiculo veiculo = VeiculoBuilder.criaVeiculo("model.Carro");
     }
 }
