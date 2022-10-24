@@ -1,24 +1,31 @@
 package model;
 
-import java.math.BigDecimal;
-
-public class Funcionario extends Pessoa {
-    private BigDecimal salarioBruto, salarioLiquido;
+public class Funcionario{
+    private long id;
+    private Double salarioBruto, salarioLiquido;
     private Pessoa pessoa;
 
-    public BigDecimal getSalarioBruto() {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Double getSalarioBruto() {
         return salarioBruto;
     }
 
-    public void setSalarioBruto(BigDecimal salarioBruto) {
+    public void setSalarioBruto(Double salarioBruto) {
         this.salarioBruto = salarioBruto;
     }
 
-    public BigDecimal getSalarioLiquido() {
+    public Double getSalarioLiquido() {
         return salarioLiquido;
     }
 
-    public void setSalarioLiquido(BigDecimal salarioLiquido) {
+    public void setSalarioLiquido(Double salarioLiquido) {
         this.salarioLiquido = salarioLiquido;
     }
 

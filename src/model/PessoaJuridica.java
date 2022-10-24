@@ -14,4 +14,9 @@ public class PessoaJuridica extends Pessoa{
     public void setCNPJ(String CNPJ) {
         this.CNPJ = CNPJ;
     }
+
+    @Override
+    public String getDocumento() {
+        return this.CNPJ;
+    }
 }

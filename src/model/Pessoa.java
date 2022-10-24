@@ -4,8 +4,10 @@ import java.time.LocalDate;
 
 public class Pessoa {
     private Long id;
-    private LocalDate dataNasc;
-    private String nome, cpf, rg, cnpj, telefone, endereco, cep;
+    private String nome, telefone, celular, endereco, cep;
+    private Pais pais;
+    private Uf uf;
+    private Cidade cidade;
     private char sexo;
     private Boolean situacao;
     private TipoPessoa tipo;
@@ -34,44 +36,20 @@ public class Pessoa {
         this.sexo = sexo;
     }
 
-    public LocalDate getData_nasc() {
-        return dataNasc;
-    }
-
-    public void setData_nasc(LocalDate dataNasc) {
-        this.dataNasc = dataNasc;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getRg() {
-        return rg;
-    }
-
-    public void setRg(String rg) {
-        this.rg = rg;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
     public String getTelefone() {
         return telefone;
     }
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getEndereco() {
@@ -104,5 +82,27 @@ public class Pessoa {
 
     public void setTipo(TipoPessoa tipo) {
         this.tipo = tipo;
+    }
+
+    public String getDocumento() {
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", celular='" + celular + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", cep='" + cep + '\'' +
+                ", pais=" + pais +
+                ", uf=" + uf +
+                ", cidade=" + cidade +
+                ", sexo=" + sexo +
+                ", situacao=" + situacao +
+                ", tipo=" + tipo +
+                '}';
     }
 }

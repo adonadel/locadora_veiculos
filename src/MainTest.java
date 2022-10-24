@@ -35,7 +35,7 @@ public class MainTest {
         //pessoa
 
         Marca marca = new Marca();
-        marca.setRazaoSocial("Ferrari");
+//        marca.setRazaoSocial("Ferrari");
 
 //        Veiculo veiculo = VeiculoBuilder.criaVeiculo("model.Carro");
     }
