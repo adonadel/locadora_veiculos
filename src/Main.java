@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 public class Main {
     public static void main(String[] args) {
         Object usuarioLogado = chamaSelecaoUsuario();
@@ -231,23 +233,38 @@ public class Main {
         Uf estado = new Uf();
         String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
-        Object[] nomesPaises = PaisDAO.findPaissInArray();
-        String nomePais = JOptionPane.showOptionDialog(null, "Selecione o país: ", "Cadastro de estado", null, null, nomesPaises, nomesPaises);
-        Pais pais = PaisDAO.(nomePais);
+        Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
+        String nomePais = JOptionPane.showOptionDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises);
+        String[] split = nomePais.split("-");
+        int paisId = parseInt(split[0]);
+        Pais pais = PaisDAO.findPaisById(paisId);
         estado.setId(UfDAO.getTotal() + 1);
         estado.setNome(nome);
-//        estado.setPais(pais);
+        estado.setPais(pais);
         estado.setSigla(sigla);
         return estado;
     }
-
     private static Cidade chamaCadastroCidade() {
         Cidade cidade = new Cidade();
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da cidade: ");
-        cidade.setId(CidadeDAO.getTotal() + 1);
+        Object[] nomesCidades = UfDAO.findUfesInArrayWithId();
+        String nomeUf = JOptionPane.showOptionDialog(null, "Selecione a cidade: ", "Cadastro de cidade", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades);
+        String[] split = nomeUf.split("-");
+        int ufId = parseInt(split[0]);
+        Uf Uf = UfDAO.findUfById(ufId);
+        cidade.setId(UfDAO.getTotal() + 1);
         cidade.setNome(nome);
+        cidade.setUf(Uf);
         return cidade;
     }
+
+//    private static Cidade chamaCadastroCidade() {
+//        Cidade cidade = new Cidade();
+//        String nome = JOptionPane.showInputDialog(null, "Informe o nome da cidade: ");
+//        cidade.setId(CidadeDAO.getTotal() + 1);
+//        cidade.setNome(nome);
+//        return cidade;
+//    }
 
     private static Modelo chamaCadastroModelo() {
         Modelo modelo = new Modelo();

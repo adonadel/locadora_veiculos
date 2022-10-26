@@ -41,6 +41,28 @@ public final class UfDAO {
         return ufsNomes.toArray();
     }
 
+    public static Uf findUfById(int id) {
+        List<Uf> ufs = UfDAO.buscarTodos();
+
+        for (Uf uf : ufs) {
+            if (uf.getId() == id) {
+                return uf;
+            }
+        }
+        return null;
+    }
+
+    public static Object[] findUfesInArrayWithId() {
+        List<Uf> ufs = UfDAO.buscarTodos();
+        List<String> ufsNomes = new ArrayList<>();
+
+        for (Uf uf : ufs) {
+            ufsNomes.add(uf.getId() + '-' + uf.getNome());
+        }
+
+        return ufsNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }

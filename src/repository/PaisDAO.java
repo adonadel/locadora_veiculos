@@ -30,12 +30,34 @@ public final class PaisDAO {
         return paisesFiltrados;
     }
 
-    public static Object[] findPaissInArray() {
+    public static Object[] findPaisesInArray() {
         List<Pais> paises = PaisDAO.buscarTodos();
         List<String> paisesNomes = new ArrayList<>();
 
         for (Pais pais : paises) {
             paisesNomes.add(pais.getNome());
+        }
+
+        return paisesNomes.toArray();
+    }
+
+    public static Pais findPaisById(int id) {
+        List<Pais> paises = PaisDAO.buscarTodos();
+
+        for (Pais pais : paises) {
+            if (pais.getId() == id) {
+                return pais;
+            }
+        }
+        return null;
+    }
+
+    public static Object[] findPaisesInArrayWithId() {
+        List<Pais> paises = PaisDAO.buscarTodos();
+        List<String> paisesNomes = new ArrayList<>();
+
+        for (Pais pais : paises) {
+            paisesNomes.add(pais.getId() + '-' + pais.getNome());
         }
 
         return paisesNomes.toArray();
