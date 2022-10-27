@@ -16,7 +16,6 @@ public final class PessoaDAO {
     }
 
     public static List<Pessoa> buscarTodos() {
-        System.out.println(pessoas);
         return pessoas;
     }
 

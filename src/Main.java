@@ -13,7 +13,7 @@ public class Main {
         checaSenhaUsuario(usuarioLogado);
     }
 
-
+    /*Pessoas e relacionados*/
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
         String endereco = JOptionPane.showInputDialog(null, "Informe o endereço da pessoa: ");
@@ -46,7 +46,7 @@ public class Main {
             pessoaFisica.setEndereco(endereco);
             pessoaFisica.setCelular(celular);
             pessoaFisica.setTelefone(telefone);
-
+            pessoaFisica.setCPF(documento);
             return pessoaFisica;
         } else {
             PessoaJuridica pessoaJuridica = new PessoaJuridica();
@@ -58,75 +58,23 @@ public class Main {
         }
     }
 
-    private static void chamaRelatorioPessoa() {
-        List<Pessoa> pessoas = PessoaDAO.buscarTodos();
-        String listaPessoas = "Lista de Pessoas";
-        for (Pessoa pessoa : pessoas) {
-            listaPessoas += "\n" + pessoa.getNome() + "  tipo: " + pessoa.getTipo() + "   documento: " + pessoa.getDocumento();
-        }
-        JOptionPane.showMessageDialog(null, listaPessoas);
-    }
-
-    private static void chamaMenuPrincipal() {
-        String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
-        int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
-                "Menu Principal",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
-        switch (opcao) {
-            case 0: //Cadastros
-                chamaMenuCadastros();
-                break;
-            case 1: //Processos
-                chamaMenuProcessos();
-                break;
-            case 2: //Relatorios
-                chamaMenuRelatorios();
-                break;
-            case 3: //SAIR
-
-                break;
-        }
-    }
-
-    private static void chamaMenuCadastros() {
-        String[] opcoesMenuCadastro = {"Cliente", "Funcionário", "Veículo", "Endereço", "Voltar"};
-        int menuCadastro = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
-                "Menu Cadastros",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
-
-        switch (menuCadastro) {
-            case 0: //cliente
-                chamaMenuCliente();
-                chamaMenuCadastros();
-                break;
-            case 1: //funcionário
-                Pessoa pessoaFisica = chamaCadastroPessoa(0);
-                PessoaDAO.salvar(pessoaFisica);
-                Funcionario funcionario = chamaCadastroFuncionario(pessoaFisica);
-                FuncionarioDAO.salvar(funcionario);
-                chamaMenuCadastros();
-                break;
-            case 2://veículos e relacionados
-                chamaMenuVeiculosERelacionados();
-                chamaMenuCadastros();
-                break;
-            case 3: //endereço e relacionados
-                chamaMenuEnderecosERelacionados();
-                chamaMenuPrincipal();
-                break;
-            case 4: //Voltar
-                chamaMenuPrincipal();
-                break;
-        }
+    private static Funcionario chamaCadastroFuncionario(Pessoa pessoa) {
+        Funcionario funcionario = new Funcionario();
+        funcionario.setPessoa(pessoa);
+        Double salBruto = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o salário bruto do funcionário: "));
+        Double salLiquido = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o salário líquido do funcionário: "));
+        funcionario.setSalarioBruto(salBruto);
+        funcionario.setSalarioBruto(salLiquido);
+        return funcionario;
     }
 
     private static void chamaMenuCliente() {
-        String[] opcoesMenuCadastro = {"Física", "Jurídica", "Voltar"};
-        int menuCadastro = JOptionPane.showOptionDialog(null, "Cadastrar cliente como pessoa:",
+        String[] opcoesMenu = {"Física", "Jurídica", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Cadastrar cliente como pessoa:",
                 "Menu Cadastros",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
 
-        switch (menuCadastro) {
+        switch (menu) {
             case 0:
                 Pessoa pessoaFisica = chamaCadastroPessoa(0);
                 PessoaDAO.salvar(pessoaFisica);
@@ -153,13 +101,63 @@ public class Main {
         }
     }
 
+    private static void chamaRelatorioPessoa(int tipoPessoa, int categoria) { // tipoPessoa = Física/Jurídica | categoria = Cliente/Funcionario
+        String tipoPessoaStr = "";
+        String listaPessoas = "";
+        if (tipoPessoa == 1) {
+            List<Funcionario> funcionarios = FuncionarioDAO.buscarTodos();
+
+            listaPessoas += "Lista de funcionários";
+
+            for (Funcionario funcionario : funcionarios) {
+                listaPessoas += "\n" + funcionario.getId() + " - " + funcionario.getPessoa().getNome() + "  tipo: " + funcionario.getPessoa().getTipo() + "   documento: " + funcionario.getPessoa().getDocumento();
+            }
+        }else {
+            List<Cliente> clientes = ClienteDAO.buscarTodos();
+
+            listaPessoas += "Lista de clientes";
+
+            for (Cliente cliente : clientes) {
+                listaPessoas += "\n" + cliente.getId() + " - " + cliente.getPessoa().getNome() + "  tipo: " + cliente.getPessoa().getTipo() + "   documento: " + cliente.getPessoa().getDocumento();
+            }
+        }
+
+        JOptionPane.showMessageDialog(null, listaPessoas);
+    }
+
+    private static void chamaMenuRelatoriosClientes() {
+        String[] opcoesMenu = {"Física", "Jurídica", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Buscar relatório de clientes como pessoa:",
+                "Menu Relatórios - Clientes",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
+
+        switch (menu) {
+            case 0:
+                chamaRelatorioPessoa(0, 1);
+                chamaMenuRelatoriosClientes();
+                break;
+            case 1:
+                chamaRelatorioPessoa(1, 1);
+                chamaMenuRelatoriosClientes();
+                break;
+            case 2:
+                chamaMenuRelatorios();
+                break;
+            case 3: //Voltar
+                chamaMenuPrincipal();
+                break;
+        }
+    }
+    /*Pessoas e relacionados*/
+
+    /*Veículos e relacionados*/
     private static void chamaMenuVeiculosERelacionados() {
         String[] opcoesMenuCadastro = {"Cadastrar veículo", "Marca", "Modelo", "Voltar"};
-        int menuCadastro = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu veículos e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
 
-        switch (menuCadastro) {
+        switch (menu) {
             case 0:
 //                chamaMenuVeiculos();
                 chamaMenuCadastros();
@@ -180,13 +178,31 @@ public class Main {
         }
     }
 
+    private static Marca chamaCadastroMarca() {
+        Marca marca = new Marca();
+        String nome = JOptionPane.showInputDialog(null, "Informe a marca: ");
+        marca.setId(MarcaDAO.getTotal() + 1);
+        marca.setNome(nome);
+        return marca;
+    }
+
+    private static Modelo chamaCadastroModelo() {
+        Modelo modelo = new Modelo();
+        String nome = JOptionPane.showInputDialog(null, "Informe o modelo: ");
+        modelo.setId(ModeloDAO.getTotal() + 1);
+        modelo.setNome(nome);
+        return modelo;
+    }
+    /*Veículos e relacionados*/
+
+    /* Enderecos e relacionados */
     private static void chamaMenuEnderecosERelacionados() {
         String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
-        int menuCadastro = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu Endereços e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
 
-        switch (menuCadastro) {
+        switch (menu) {
             case 0:
                 Pais pais = chamaCadastroPais();
                 PaisDAO.salvar(pais);
@@ -211,21 +227,11 @@ public class Main {
         }
     }
 
-    private static Marca chamaCadastroMarca() {
-        Marca marca = new Marca();
-        String nome = JOptionPane.showInputDialog(null, "Informe a marca: ");
-        marca.setId(MarcaDAO.getTotal() + 1);
-        marca.setNome(nome);
-        return marca;
-    }
-
     private static Pais chamaCadastroPais() {
         Pais pais = new Pais();
         String nome = JOptionPane.showInputDialog(null, "Informe o nome do país: ");
-        String ibge = JOptionPane.showInputDialog(null, "Informe a inscrição IBGE do país: ");
         pais.setId(PaisDAO.getTotal() + 1);
         pais.setNome(nome);
-        pais.setIbge(ibge);
         return pais;
     }
 
@@ -234,8 +240,8 @@ public class Main {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
         Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
-        String nomePais = JOptionPane.showOptionDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises);
-        String[] split = nomePais.split("-");
+        Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
+        String[] split = nomePais.toString().split(" - ");
         int paisId = parseInt(split[0]);
         Pais pais = PaisDAO.findPaisById(paisId);
         estado.setId(UfDAO.getTotal() + 1);
@@ -244,48 +250,82 @@ public class Main {
         estado.setSigla(sigla);
         return estado;
     }
+
     private static Cidade chamaCadastroCidade() {
         Cidade cidade = new Cidade();
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da cidade: ");
-        Object[] nomesCidades = UfDAO.findUfesInArrayWithId();
-        String nomeUf = JOptionPane.showOptionDialog(null, "Selecione a cidade: ", "Cadastro de cidade", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades);
-        String[] split = nomeUf.split("-");
+        Object[] nomesUfs = UfDAO.findUfesInArrayWithId();
+        Object nomeUf = JOptionPane.showInputDialog(null, "Selecione o estado: ", "Cadastro de cidade", JOptionPane.QUESTION_MESSAGE, null, nomesUfs, nomesUfs[0]);
+        String[] split = nomeUf.toString().split(" - ");
         int ufId = parseInt(split[0]);
+        System.out.println(ufId);
         Uf Uf = UfDAO.findUfById(ufId);
-        cidade.setId(UfDAO.getTotal() + 1);
+        cidade.setId(CidadeDAO.getTotal() + 1);
         cidade.setNome(nome);
         cidade.setUf(Uf);
         return cidade;
     }
+    /* EnderecosERelacionados */
 
-//    private static Cidade chamaCadastroCidade() {
-//        Cidade cidade = new Cidade();
-//        String nome = JOptionPane.showInputDialog(null, "Informe o nome da cidade: ");
-//        cidade.setId(CidadeDAO.getTotal() + 1);
-//        cidade.setNome(nome);
-//        return cidade;
-//    }
+    /*Menus principais e relacionados*/
+    private static void chamaMenuPrincipal() {
+        String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
+        int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
+                "Menu Principal",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
+        switch (opcao) {
+            case 0: //Cadastros
+                chamaMenuCadastros();
+                chamaMenuPrincipal();
+                break;
+            case 1: //Processos
+                chamaMenuProcessos();
+                chamaMenuPrincipal();
+                break;
+            case 2: //Relatorios
+                chamaMenuRelatorios();
+                chamaMenuPrincipal();
+                break;
+            case 3: //SAIR
 
-    private static Modelo chamaCadastroModelo() {
-        Modelo modelo = new Modelo();
-        String nome = JOptionPane.showInputDialog(null, "Informe o modelo: ");
-        modelo.setId(ModeloDAO.getTotal() + 1);
-        modelo.setNome(nome);
-        return modelo;
+                break;
+        }
     }
 
-    private static Funcionario chamaCadastroFuncionario(Pessoa pessoa) {
-        Funcionario funcionario = new Funcionario();
-        funcionario.setPessoa(pessoa);
-        Double salBruto = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o salário bruto do funcionário: "));
-        Double salLiquido = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o salário líquido do funcionário: "));
-        funcionario.setSalarioBruto(salBruto);
-        funcionario.setSalarioBruto(salLiquido);
-        return funcionario;
+    private static void chamaMenuCadastros() {
+        String[] opcoesMenuCadastro = {"Cliente", "Funcionário", "Veículo", "Endereço", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
+                "Menu Cadastros",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+
+        switch (menu) {
+            case 0: //cliente
+                chamaMenuCliente();
+                chamaMenuCadastros();
+                break;
+            case 1: //funcionário
+                Pessoa pessoaFisica = chamaCadastroPessoa(1);
+                PessoaDAO.salvar(pessoaFisica);
+                Funcionario funcionario = chamaCadastroFuncionario(pessoaFisica);
+                FuncionarioDAO.salvar(funcionario);
+                chamaMenuCadastros();
+                break;
+            case 2://veículos e relacionados
+                chamaMenuVeiculosERelacionados();
+                chamaMenuCadastros();
+                break;
+            case 3: //endereço e relacionados
+                chamaMenuEnderecosERelacionados();
+                chamaMenuPrincipal();
+                break;
+            case 4: //Voltar
+                chamaMenuPrincipal();
+                break;
+        }
     }
 
     private static void chamaMenuProcessos() {
-        String[] opcoesMenuProcesso = {"Gerar Sinistro", "Baixar Seguro", "Voltar"};
+        String[] opcoesMenuProcesso = {"Alugar carro", "Devolver carro", "Voltar"};
         int menu_processos = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Processos",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
@@ -304,13 +344,14 @@ public class Main {
     }
 
     private static void chamaMenuRelatorios() {
-        String[] opcoesMenuProcesso = {"Pessoas", "Seguradoras", "Seguros", "Voltar"};
-        int menu_processos = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
+        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Relatórios",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
 
-        switch (menu_processos) {
+        switch (menu) {
             case 0:
+                chamaMenuRelatoriosClientes();
                 chamaMenuRelatorios();
                 break;
             case 1:
@@ -341,8 +382,8 @@ public class Main {
         Object[] selectionValues = UsuarioDAO.findUsuariosSistemaInArray();
         String initialSelection = (String) selectionValues[0];
         Object selection = JOptionPane.showInputDialog(null, "Selecione o usuario?",
-                "SeguradoraAPP", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
+                "Aluguel de veículos", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
         return selection;
     }
-
+    /*Menus principais e relacionados*/
 }

@@ -11,7 +11,6 @@ public class MainTest {
 
         pais.setId(1);
         pais.setNome("Brasil");
-        pais.setIbge("465871223");
 
         Uf uf = new Uf();
 

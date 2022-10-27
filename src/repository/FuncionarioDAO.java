@@ -16,7 +16,6 @@ public final class FuncionarioDAO {
     }
 
     public static List<Funcionario> buscarTodos() {
-        System.out.println(funcionarios);
         return funcionarios;
     }
 

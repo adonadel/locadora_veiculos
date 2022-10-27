@@ -16,7 +16,6 @@ public final class UfDAO {
     }
 
     public static List<Uf> buscarTodos() {
-        System.out.println(ufs);
         return ufs;
     }
 
@@ -57,7 +56,7 @@ public final class UfDAO {
         List<String> ufsNomes = new ArrayList<>();
 
         for (Uf uf : ufs) {
-            ufsNomes.add(uf.getId() + '-' + uf.getNome());
+            ufsNomes.add(uf.getId() + " - " + uf.getNome());
         }
 
         return ufsNomes.toArray();

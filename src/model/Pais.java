@@ -2,7 +2,7 @@ package model;
 
 public class Pais {
     private long id;
-    private String nome, ibge;
+    private String nome;
 
     public long getId() {
         return id;
@@ -18,13 +18,5 @@ public class Pais {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getIbge() {
-        return ibge;
-    }
-
-    public void setIbge(String ibge) {
-        this.ibge = ibge;
     }
 }

@@ -16,7 +16,6 @@ public final class ClienteDAO {
     }
 
     public static List<Cliente> buscarTodos() {
-        System.out.println(clientes);
         return clientes;
     }
 

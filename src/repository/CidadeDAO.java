@@ -16,7 +16,6 @@ public final class CidadeDAO {
     }
 
     public static List<Cidade> buscarTodos() {
-        System.out.println(cidades);
         return cidades;
     }
 
@@ -39,6 +38,17 @@ public final class CidadeDAO {
         }
 
         return cidadesNomes.toArray();
+    }
+
+    public static Cidade findCidadeById(int id) {
+        List<Cidade> cidades = CidadeDAO.buscarTodos();
+
+        for (Cidade cidade : cidades) {
+            if (cidade.getId() == id) {
+                return cidade;
+            }
+        }
+        return null;
     }
 
     public static int getTotal() {

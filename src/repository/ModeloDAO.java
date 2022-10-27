@@ -16,7 +16,6 @@ public final class ModeloDAO {
     }
 
     public static List<Modelo> buscarTodos() {
-        System.out.println(modelos);
         return modelos;
     }
 

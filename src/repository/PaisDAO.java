@@ -16,7 +16,6 @@ public final class PaisDAO {
     }
 
     public static List<Pais> buscarTodos() {
-        System.out.println(paises);
         return paises;
     }
 
@@ -57,7 +56,7 @@ public final class PaisDAO {
         List<String> paisesNomes = new ArrayList<>();
 
         for (Pais pais : paises) {
-            paisesNomes.add(pais.getId() + '-' + pais.getNome());
+            paisesNomes.add(pais.getId() + " - " + pais.getNome());
         }
 
         return paisesNomes.toArray();

@@ -16,7 +16,6 @@ public final class MarcaDAO {
     }
 
     public static List<Marca> buscarTodos() {
-        System.out.println(marcas);
         return marcas;
     }
 
