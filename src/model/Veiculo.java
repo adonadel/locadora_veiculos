@@ -2,25 +2,27 @@ package model;
 
 import model.CategoriaVeiculo;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Veiculo{
 
     private long id;
-    private float peso;
+    private Double peso;
     private LocalDate dataFabricacao;
     private int numeroSerie;
-    private double valorFipe;
-    private double valorCompra;
+    private BigDecimal valorFipe;
+    private BigDecimal valorCompra;
     private int hodometro;
     private String descricao;
-    private String tipoCombustivel;
+    private TipoCombustivel tipoCombustivel;
     private String placa;
     private LocalDate ultimaRevisao;
-    private double pesoSuportado;
-    private float TrocaOleokm; //ultima troca em km (50.000 foi trocado o oleo)
+    private Double pesoSuportado;
+    private Double TrocaOleokm; //ultima troca em km (50.000 foi trocado o oleo)
     private CategoriaVeiculo categoria;
-    private  TipoVeiculo tipo;
+    private TipoVeiculo tipo;
+    private Modelo modelo;
 
     public long getId() {
         return id;
@@ -30,11 +32,11 @@ public class Veiculo{
         this.id = id;
     }
 
-    public float getPeso() {
+    public Double getPeso() {
         return peso;
     }
 
-    public void setPeso(float peso) {
+    public void setPeso(Double peso) {
         this.peso = peso;
     }
 
@@ -54,19 +56,19 @@ public class Veiculo{
         this.numeroSerie = numeroSerie;
     }
 
-    public double getValorFipe() {
+    public BigDecimal getValorFipe() {
         return valorFipe;
     }
 
-    public void setValorFipe(double valorFipe) {
+    public void setValorFipe(BigDecimal valorFipe) {
         this.valorFipe = valorFipe;
     }
 
-    public double getValorCompra() {
+    public BigDecimal getValorCompra() {
         return valorCompra;
     }
 
-    public void setValorCompra(double valorCompra) {
+    public void setValorCompra(BigDecimal valorCompra) {
         this.valorCompra = valorCompra;
     }
 
@@ -86,11 +88,11 @@ public class Veiculo{
         this.descricao = descricao;
     }
 
-    public String getTipoCombustivel() {
+    public TipoCombustivel getTipoCombustivel() {
         return tipoCombustivel;
     }
 
-    public void setTipoCombustivel(String tipoCombustivel) {
+    public void setTipoCombustivel(TipoCombustivel tipoCombustivel) {
         this.tipoCombustivel = tipoCombustivel;
     }
 
@@ -110,19 +112,19 @@ public class Veiculo{
         this.ultimaRevisao = ultimaRevisao;
     }
 
-    public double getPesoSuportado() {
+    public Double getPesoSuportado() {
         return pesoSuportado;
     }
 
-    public void setPesoSuportado(double pesoSuportado) {
+    public void setPesoSuportado(Double pesoSuportado) {
         this.pesoSuportado = pesoSuportado;
     }
 
-    public float getTrocaOleokm() {
+    public Double getTrocaOleokm() {
         return TrocaOleokm;
     }
 
-    public void setTrocaOleokm(float trocaOleokm) {
+    public void setTrocaOleokm(Double trocaOleokm) {
         TrocaOleokm = trocaOleokm;
     }
 
@@ -140,5 +142,13 @@ public class Veiculo{
 
     public void setTipo(TipoVeiculo tipo) {
         this.tipo = tipo;
+    }
+
+    public Modelo getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(Modelo modelo) {
+        this.modelo = modelo;
     }
 }

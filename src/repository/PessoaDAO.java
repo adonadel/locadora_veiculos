@@ -40,6 +40,17 @@ public final class PessoaDAO {
         return pessoasNomes.toArray();
     }
 
+    public static Object[] findPessoasInArrayWithId() {
+        List<Pessoa> pessoas = PessoaDAO.buscarTodos();
+        List<String> pessoasNomes = new ArrayList<>();
+
+        for (Pessoa pessoa : pessoas) {
+            pessoasNomes.add(pessoa.getId() + " - " + pessoa.getNome());
+        }
+
+        return pessoasNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }

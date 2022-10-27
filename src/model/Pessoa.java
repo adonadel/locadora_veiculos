@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Pessoa {
     private Long id;
-    private String nome, telefone, celular, endereco, cep;
+    private String nome, telefone, celular, cep;
     private Pais pais;
     private Uf uf;
     private Cidade cidade;
@@ -52,14 +52,6 @@ public class Pessoa {
         this.celular = celular;
     }
 
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
     public String getCep() {
         return cep;
     }
@@ -88,6 +80,30 @@ public class Pessoa {
         return "";
     }
 
+    public Pais getPais() {
+        return pais;
+    }
+
+    public void setPais(Pais pais) {
+        this.pais = pais;
+    }
+
+    public Uf getUf() {
+        return uf;
+    }
+
+    public void setUf(Uf uf) {
+        this.uf = uf;
+    }
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
     @Override
     public String toString() {
         return "Pessoa{" +
@@ -95,11 +111,10 @@ public class Pessoa {
                 ", nome='" + nome + '\'' +
                 ", telefone='" + telefone + '\'' +
                 ", celular='" + celular + '\'' +
-                ", endereco='" + endereco + '\'' +
                 ", cep='" + cep + '\'' +
-                ", pais=" + pais +
-                ", uf=" + uf +
-                ", cidade=" + cidade +
+                ", pais=" + pais.getNome() +
+                ", uf=" + uf.getNome() +
+                ", cidade=" + cidade.getNome() +
                 ", sexo=" + sexo +
                 ", situacao=" + situacao +
                 ", tipo=" + tipo +

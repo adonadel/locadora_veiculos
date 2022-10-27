@@ -1,0 +1,14 @@
+package model;
+
+public enum TipoCombustivel {
+    DIESEL_COMUM,
+    DIESEL_ADITIVADO,
+    DIESEL_PREMIUM,
+    ELETRICO,
+    ETANOL_COMUM,
+    ETANOL_ADITIVADO,
+    GASOLINA_COMUM,
+    GASOLINA_ADITIVADA,
+    GASOLINA_PREMIUM,
+    GNV
+}

@@ -51,6 +51,17 @@ public final class CidadeDAO {
         return null;
     }
 
+    public static Object[] findCidadesInArrayWithId() {
+        List<Cidade> cidades = CidadeDAO.buscarTodos();
+        List<String> cidadesNomes = new ArrayList<>();
+
+        for (Cidade cidade : cidades) {
+            cidadesNomes.add(cidade.getId() + " - " + cidade.getNome());
+        }
+
+        return cidadesNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }
