@@ -131,7 +131,8 @@ public class Main {
         }
     }
 
-    private static void chamaRelatorioPessoa(int tipoPessoa, int categoria) { // tipoPessoa = Física/Jurídica | categoria = Cliente/Funcionario
+    private static void chamaRelatorioPessoa(int tipoPessoa) { // tipoPessoa = Funcionario / cliente
+
         String listaPessoas = "";
         if (tipoPessoa == 1) {
             List<Funcionario> funcionarios = FuncionarioDAO.buscarTodos();
@@ -152,30 +153,6 @@ public class Main {
         }
 
         JOptionPane.showMessageDialog(null, listaPessoas);
-    }
-
-    private static void chamaMenuRelatoriosClientes() {
-        String[] opcoesMenu = {"Física", "Jurídica", "Voltar"};
-        int menu = JOptionPane.showOptionDialog(null, "Buscar relatório de clientes como pessoa:",
-                "Menu Relatórios - Clientes",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
-
-        switch (menu) {
-            case 0:
-                chamaRelatorioPessoa(0, 1);
-                chamaMenuRelatoriosClientes();
-                break;
-            case 1:
-                chamaRelatorioPessoa(1, 1);
-                chamaMenuRelatoriosClientes();
-                break;
-            case 2:
-                chamaMenuRelatorios();
-                break;
-            case 3: //Voltar
-                chamaMenuPrincipal();
-                break;
-        }
     }
     /*Pessoas e relacionados*/
 
@@ -242,10 +219,8 @@ public class Main {
     private static Veiculo chamaCadastroVeiculo(int tipoVeiculo) {
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        Double peso = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o peso do veículo: "));
-        String auxDataFabricacao = JOptionPane.showInputDialog(null, "Informe a data de fabricação (DD/MM/AAAA) do veículo: ");
-        LocalDate dataFabricacao = LocalDate.parse(auxDataFabricacao, pattern);
-        int numeroSerie = parseInt(JOptionPane.showInputDialog(null, "Informe o número de série do veículo: "));
+        int anoFabricacao = parseInt(JOptionPane.showInputDialog(null, "Informe o ano de fabricação (DD/MM/AAAA) do veículo: "));
+        long numeroSerie = parseInt(JOptionPane.showInputDialog(null, "Informe o número de série do veículo: "));
         BigDecimal valorFipe = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor da fipe do veículo: ")));
         BigDecimal valorCompra = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor de compra do veículo: ")));
         int hodometro = parseInt(JOptionPane.showInputDialog(null, "Informe o hodômetro do veículo: "));
@@ -285,8 +260,7 @@ public class Main {
             case 1:
                 Caminhao caminhao = new Caminhao();
                 caminhao.setId(id);
-                caminhao.setPeso(peso);
-                caminhao.setDataFabricacao(dataFabricacao);
+                caminhao.setAnoFabricacao(anoFabricacao);
                 caminhao.setNumeroSerie(numeroSerie);
                 caminhao.setValorFipe(valorFipe);
                 caminhao.setValorCompra(valorCompra);
@@ -304,8 +278,7 @@ public class Main {
             case 2:
                 Carro carro = new Carro();
                 carro.setId(id);
-                carro.setPeso(peso);
-                carro.setDataFabricacao(dataFabricacao);
+                carro.setAnoFabricacao(anoFabricacao);
                 carro.setNumeroSerie(numeroSerie);
                 carro.setValorFipe(valorFipe);
                 carro.setValorCompra(valorCompra);
@@ -323,8 +296,7 @@ public class Main {
             case 3:
                 Moto moto = new Moto();
                 moto.setId(id);
-                moto.setPeso(peso);
-                moto.setDataFabricacao(dataFabricacao);
+                moto.setAnoFabricacao(anoFabricacao);
                 moto.setNumeroSerie(numeroSerie);
                 moto.setValorFipe(valorFipe);
                 moto.setValorCompra(valorCompra);
@@ -420,6 +392,95 @@ public class Main {
         modelo.setMarca(marca);
         return modelo;
     }
+
+    private static void chamaRelatorioVeiculos() {
+
+        String listaVeiculos = "";
+
+        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
+
+        listaVeiculos += "Lista de veículos";
+
+        for (Veiculo veiculo : veiculos) {
+            listaVeiculos += "\n" + veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")";
+        }
+
+        JOptionPane.showMessageDialog(null, listaVeiculos);
+    }
+
+    private static void chamaMenuRelatorioVeiculosERelacionados() {
+        String[] opcoesMenuCadastro = {"Cadastrar veículo", "Adicionais", "Marca", "Modelo", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+                "Menu veículos e relacionados",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+
+        switch (menu) {
+            case 0:
+                chamaRelatorioVeiculos();
+                chamaMenuRelatorioVeiculosERelacionados();
+                break;
+            case 1:
+                chamaRelatorioAdicionais();
+                chamaMenuRelatorioVeiculosERelacionados();
+                break;
+            case 2:
+                chamaRelatorioMarcas();
+                chamaMenuRelatorioVeiculosERelacionados();
+                break;
+            case 3:
+                chamaRelatorioModelos();
+                chamaMenuRelatorioVeiculosERelacionados();
+                break;
+            case 4: //Voltar
+                chamaMenuCadastros();
+                break;
+        }
+    }
+
+    private static void chamaRelatorioAdicionais() {
+
+        String listaAdicionais = "";
+
+        List<Adicional> adicionais = AdicionalDAO.buscarTodos();
+
+        listaAdicionais += "Lista de adicionais";
+
+        for (Adicional adicional : adicionais) {
+            listaAdicionais += "\n" + adicional.getId() + " - " + adicional.getNome() + " - " + adicional.getDescricao();
+        }
+
+        JOptionPane.showMessageDialog(null, listaAdicionais);
+    }
+
+    private static void chamaRelatorioModelos() {
+
+        String listaModelos = "";
+
+        List<Modelo> modelos = ModeloDAO.buscarTodos();
+
+        listaModelos += "Lista de modelos";
+
+        for (Modelo adicional : modelos) {
+            listaModelos += "\n" + adicional.getId() + " - " + adicional.getNome() + " - marca: " + adicional.getMarca().getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaModelos);
+    }
+
+    private static void chamaRelatorioMarcas() {
+
+        String listaMarcas = "";
+
+        List<Marca> marcas = MarcaDAO.buscarTodos();
+
+        listaMarcas += "Lista de marcas";
+
+        for (Marca marca : marcas) {
+            listaMarcas += "\n" + marca.getId() + " - " + marca.getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaMarcas);
+    }
     /*Veículos e relacionados*/
 
     /* Enderecos e relacionados */
@@ -490,6 +551,76 @@ public class Main {
         cidade.setNome(nome);
         cidade.setUf(Uf);
         return cidade;
+    }
+
+    private static void chamaMenuRelatorioEnderecos() {
+        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+                "Menu Endereços e relacionados",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+
+        switch (menu) {
+            case 0:
+                chamaRelatorioPais();
+                chamaMenuRelatorioEnderecos();
+                break;
+            case 1:
+                chamaRelatorioUf();
+                chamaMenuRelatorioEnderecos();
+                break;
+            case 2:
+                chamaRelatorioCidade();
+                chamaMenuRelatorioEnderecos();
+                break;
+            case 3: //Voltar
+                chamaMenuRelatorios();
+                break;
+        }
+    }
+
+    private static void chamaRelatorioPais() {
+
+        String listaPais = "";
+
+        List<Pais> paises = PaisDAO.buscarTodos();
+
+        listaPais += "Lista de paises";
+
+        for (Pais pais : paises) {
+            listaPais += "\n" + pais.getId() + " - " + pais.getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaPais);
+    }
+
+    private static void chamaRelatorioUf() {
+
+        String listaUf = "";
+
+        List<Uf> ufs = UfDAO.buscarTodos();
+
+        listaUf += "Lista de estados";
+
+        for (Uf uf : ufs) {
+            listaUf += "\n" + uf.getId() + " - " + uf.getNome() + "sigla: " + uf.getSigla() + " pais: " + uf.getPais().getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaUf);
+    }
+
+    private static void chamaRelatorioCidade() {
+
+        String listaCidade = "";
+
+        List<Cidade> cidades = CidadeDAO.buscarTodos();
+
+        listaCidade += "Lista de cidades";
+
+        for (Cidade cidade : cidades) {
+            listaCidade += "\n" + cidade.getId() + " - " + cidade.getNome() + " estado: " + cidade.getUf().getNome() + " pais: " + cidade.getUf().getPais().getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaCidade);
     }
     /* EnderecosERelacionados */
 
@@ -577,16 +708,22 @@ public class Main {
 
         switch (menu) {
             case 0:
-                chamaMenuRelatoriosClientes();
+                chamaRelatorioPessoa(0);
                 chamaMenuRelatorios();
                 break;
             case 1:
+                chamaRelatorioPessoa(1);
                 chamaMenuRelatorios();
                 break;
             case 2:
+                chamaMenuRelatorioVeiculosERelacionados();
                 chamaMenuRelatorios();
                 break;
             case 3: //Voltar
+                chamaMenuRelatorioEnderecos();
+                chamaMenuRelatorios();
+                break;
+            case 4: //Voltar
                 chamaMenuPrincipal();
                 break;
         }

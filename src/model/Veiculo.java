@@ -10,9 +10,8 @@ import java.util.List;
 public class Veiculo{
 
     private long id;
-    private Double peso;
-    private LocalDate dataFabricacao;
-    private int numeroSerie;
+    private int anoFabricacao;
+    private long numeroSerie;
     private BigDecimal valorFipe;
     private BigDecimal valorCompra;
     private int hodometro;
@@ -33,27 +32,23 @@ public class Veiculo{
         this.id = id;
     }
 
-    public Double getPeso() {
-        return peso;
+    public int getAnoFabricacao() {
+        return anoFabricacao;
     }
 
-    public void setPeso(Double peso) {
-        this.peso = peso;
+    public void setAnoFabricacao(int anoFabricacao) {
+        this.anoFabricacao = anoFabricacao;
     }
 
-    public LocalDate getDataFabricacao() {
-        return dataFabricacao;
+    public void setAdicionais(List<Adicional> adicionais) {
+        this.adicionais = adicionais;
     }
 
-    public void setDataFabricacao(LocalDate dataFabricacao) {
-        this.dataFabricacao = dataFabricacao;
-    }
-
-    public int getNumeroSerie() {
+    public long getNumeroSerie() {
         return numeroSerie;
     }
 
-    public void setNumeroSerie(int numeroSerie) {
+    public void setNumeroSerie(long numeroSerie) {
         this.numeroSerie = numeroSerie;
     }
 
