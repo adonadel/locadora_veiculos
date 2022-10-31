@@ -51,8 +51,8 @@ public final class ModeloDAO {
         return null;
     }
 
-    public static Object[] findModeloesInArrayWithId() {
-        List<Modelo> modeloes = ModeloDAO.buscarTodos();
+    public static Object[] findModelosInArrayWithId() {
+        List<Modelo> modelos = ModeloDAO.buscarTodos();
         List<String> modelosNomes = new ArrayList<>();
 
         for (Modelo modelo : modelos) {

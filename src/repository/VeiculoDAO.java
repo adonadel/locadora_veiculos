@@ -67,6 +67,10 @@ public final class VeiculoDAO {
         veiculo.setAdicionais(adicional);
     }
 
+    public static void removeAdicional(Adicional adicional, Veiculo veiculo) {
+        veiculo.removeAdicional(adicional);
+    }
+
     public static int getTotal() {
         return total;
     }
