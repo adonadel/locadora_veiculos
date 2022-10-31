@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -18,7 +19,7 @@ public class Main {
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
 
-        Object[] nomesPaises = PaisDAO.findPaisesInArray();
+        Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de pessoas", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
         String[] splitPais = nomePais.toString().split(" - ");
         int paisId = parseInt(splitPais[0]);
@@ -188,22 +189,21 @@ public class Main {
         switch (menu) {
             case 0:
                 chamaMenuVeiculos();
-                chamaMenuCadastros();
+                chamaMenuVeiculosERelacionados();
                 break;
             case 1:
-                Adicional adicional = chamaCadastroAdicional();
-                AdicionalDAO.salvar(adicional);
-                chamaMenuCadastros();
+                chamaMenuAdicionais();
+                chamaMenuVeiculosERelacionados();
                 break;
             case 2:
                 Marca marca = chamaCadastroMarca();
                 MarcaDAO.salvar(marca);
-                chamaMenuCadastros();
+                chamaMenuVeiculosERelacionados();
                 break;
             case 3:
                 Modelo modelo = chamaCadastroModelo();
                 ModeloDAO.salvar(modelo);
-                chamaMenuCadastros();
+                chamaMenuVeiculosERelacionados();
                 break;
             case 4: //Voltar
                 chamaMenuCadastros();
@@ -216,21 +216,22 @@ public class Main {
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu cadastro veículos",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
-
+        Veiculo veiculo;
         switch (menu) {
             case 0: //caminhão
-                Veiculo veiculo = chamaCadastroVeiculo(1);
+                veiculo = chamaCadastroVeiculo(0);
                 VeiculoDAO.salvar(veiculo);
 
                 chamaMenuVeiculos();
                 break;
             case 1: //carro
-                chamaCadastroVeiculo(2);
+                veiculo = chamaCadastroVeiculo(1);
+                VeiculoDAO.salvar(veiculo);
                 chamaMenuVeiculos();
                 break;
             case 2: //moto
-                chamaCadastroVeiculo(3);
-                chamaMenuVeiculos();
+                veiculo = chamaCadastroVeiculo(2);
+                VeiculoDAO.salvar(veiculo);
                 break;
             case 3:
                 chamaMenuVeiculosERelacionados();
@@ -239,11 +240,44 @@ public class Main {
     }
 
     private static Veiculo chamaCadastroVeiculo(int tipoVeiculo) {
-        String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-//        LocalDate dataNasc = null;
-//        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//        dataNasc = LocalDate.parse(auxDataNasc, pattern);
+        Double peso = Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o peso do veículo: "));
+        String auxDataFabricacao = JOptionPane.showInputDialog(null, "Informe a data de fabricação (DD/MM/AAAA) do veículo: ");
+        LocalDate dataFabricacao = LocalDate.parse(auxDataFabricacao, pattern);
+        int numeroSerie = parseInt(JOptionPane.showInputDialog(null, "Informe o número de série do veículo: "));
+        BigDecimal valorFipe = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor da fipe do veículo: ")));
+        BigDecimal valorCompra = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor de compra do veículo: ")));
+        int hodometro = parseInt(JOptionPane.showInputDialog(null, "Informe o hodômetro do veículo: "));
+        String descricao = JOptionPane.showInputDialog(null, "Informe uma descrição sobre o veículo: ");
+        TipoCombustivel[] tipoCombustiveis = {
+            TipoCombustivel.DIESEL_COMUM,
+            TipoCombustivel.DIESEL_ADITIVADO,
+            TipoCombustivel.DIESEL_PREMIUM,
+            TipoCombustivel.ELETRICO,
+            TipoCombustivel.ETANOL_COMUM,
+            TipoCombustivel.ETANOL_ADITIVADO,
+            TipoCombustivel.GASOLINA_COMUM,
+            TipoCombustivel.GASOLINA_ADITIVADA,
+            TipoCombustivel.GASOLINA_PREMIUM,
+            TipoCombustivel.GNV
+        };
+        TipoCombustivel tipoCombustivel = (TipoCombustivel) JOptionPane.showInputDialog(null, "Seleciona o tipo de combustível do veículo: ", "Cadastro de veículo", JOptionPane.DEFAULT_OPTION, null, tipoCombustiveis, tipoCombustiveis[0]);
+        String placa = JOptionPane.showInputDialog(null, "Informe a placa do veículo: ");
+        String auxUltimaRevisao = JOptionPane.showInputDialog(null, "Informe a data da última revisão (DD/MM/AAAA) do veículo: ");
+        LocalDate ultimaRevisao = LocalDate.parse(auxUltimaRevisao, pattern);
+        CategoriaVeiculo[] categoriasVeiculo = {
+            CategoriaVeiculo.LUXO,
+            CategoriaVeiculo.COMUM,
+            CategoriaVeiculo.UTILITARIO
+        };
+        CategoriaVeiculo categoria = (CategoriaVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo de combustível do veículo: ", "Cadastro de veículo", JOptionPane.DEFAULT_OPTION, null, categoriasVeiculo, categoriasVeiculo[0]);
+
+        Object[] nomesModelo = ModeloDAO.findModelosInArray();
+        Object nomeModelo = JOptionPane.showInputDialog(null, "Selecione o modelo: ", "Cadastro de veículo", JOptionPane.QUESTION_MESSAGE, null, nomesModelo, nomesModelo[0]);
+        String[] split = nomeModelo.toString().split(" - ");
+        int modeloId = parseInt(split[0]);
+        Modelo modelo = ModeloDAO.findModeloById(modeloId);
 
         long id = VeiculoDAO.getTotal() + 1;
         Veiculo veiculo = new Veiculo();
@@ -261,10 +295,8 @@ public class Main {
                 caminhao.setTipoCombustivel(tipoCombustivel);
                 caminhao.setPlaca(placa);
                 caminhao.setUltimaRevisao(ultimaRevisao);
-                caminhao.setPesoSuportado(pesoSuportado);
-                caminhao.setTrocaOleokm(trocaOleoKm);
                 caminhao.setCategoria(categoria);
-                caminhao.setTipo(tipoVeiculo);
+                caminhao.setTipo(TipoVeiculo.CAMINHAO);
                 caminhao.setModelo(modelo);
 
                 veiculo = caminhao;
@@ -282,10 +314,8 @@ public class Main {
                 carro.setTipoCombustivel(tipoCombustivel);
                 carro.setPlaca(placa);
                 carro.setUltimaRevisao(ultimaRevisao);
-                carro.setPesoSuportado(pesoSuportado);
-                carro.setTrocaOleokm(trocaOleoKm);
                 carro.setCategoria(categoria);
-                carro.setTipo(tipo);
+                carro.setTipo(TipoVeiculo.CARRO);
                 carro.setModelo(modelo);
 
                 veiculo = carro;
@@ -303,16 +333,35 @@ public class Main {
                 moto.setTipoCombustivel(tipoCombustivel);
                 moto.setPlaca(placa);
                 moto.setUltimaRevisao(ultimaRevisao);
-                moto.setPesoSuportado(pesoSuportado);
-                moto.setTrocaOleokm(trocaOleoKm);
                 moto.setCategoria(categoria);
-                moto.setTipo(tipo);
+                moto.setTipo(TipoVeiculo.MOTO);
                 moto.setModelo(modelo);
 
                 veiculo = moto;
                 break;
         }
         return veiculo;
+    }
+
+    private static void chamaMenuAdicionais() {
+        String[] opcoesMenuCadastro = {"Cadastrar adicional", "Incluir em um veículo"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+                "Menu cadastro de adicionais",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+        switch (menu) {
+            case 0: //cadastro
+                Adicional adicional = chamaCadastroAdicional();
+                AdicionalDAO.salvar(adicional);
+                chamaMenuAdicionais();
+                break;
+            case 1: //incluir em um veículo
+                chamaIncluiAdicionais();
+                chamaMenuAdicionais();
+                break;
+            case 3:
+                chamaMenuVeiculosERelacionados();
+                break;
+        }
     }
 
     private static Adicional chamaCadastroAdicional() {
@@ -327,6 +376,27 @@ public class Main {
         return adicional;
     }
 
+    private static void chamaIncluiAdicionais() {
+
+        Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
+        Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Inclusão de adicionais", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+        String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
+        int veiculoId = parseInt(splitVeiculo[0]);
+        Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
+
+        int continuar = 1;
+        Adicional adicional;
+        do {
+            Object[] listAdicionais = AdicionalDAO.findAdicionaisInArrayWithId();
+            Object nomeAdicional = JOptionPane.showInputDialog(null, "Selecione um adicional: ", "Inclusão de adicionais", JOptionPane.QUESTION_MESSAGE, null, listAdicionais, listAdicionais[0]);
+            String[] splitAdicional = nomeAdicional.toString().split(" - ");
+            int adicionalId = parseInt(splitAdicional[0]);
+            adicional = AdicionalDAO.findAdicionalById(adicionalId);
+            VeiculoDAO.incluiAdicional(adicional, veiculo);
+            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um adicional?", "Inclusão de adicionais", JOptionPane.YES_NO_OPTION));
+        }while(continuar == 0);
+    }
+
     private static Marca chamaCadastroMarca() {
         Marca marca = new Marca();
         String nome = JOptionPane.showInputDialog(null, "Informe a marca: ");
@@ -338,8 +408,16 @@ public class Main {
     private static Modelo chamaCadastroModelo() {
         Modelo modelo = new Modelo();
         String nome = JOptionPane.showInputDialog(null, "Informe o modelo: ");
+
+        Object[] nomesMarcas = MarcaDAO.findMarcasInArrayWithId();
+        Object nomeMarca = JOptionPane.showInputDialog(null, "Selecione a marca: ", "Cadastro de modelo", JOptionPane.QUESTION_MESSAGE, null, nomesMarcas, nomesMarcas[0]);
+        String[] split = nomeMarca.toString().split(" - ");
+        int marcaId = parseInt(split[0]);
+        Marca marca = MarcaDAO.findMarcasById(marcaId);
+
         modelo.setId(ModeloDAO.getTotal() + 1);
         modelo.setNome(nome);
+        modelo.setMarca(marca);
         return modelo;
     }
     /*Veículos e relacionados*/
@@ -388,7 +466,7 @@ public class Main {
         Uf estado = new Uf();
         String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
-        Object[] nomesPaises = PaisDAO.findPaisesInArray();
+        Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
         String[] split = nomePais.toString().split(" - ");
         int paisId = parseInt(split[0]);

@@ -40,6 +40,28 @@ public final class MarcaDAO {
         return marcasNomes.toArray();
     }
 
+    public static Marca findMarcasById(int id) {
+        List<Marca> marcas = MarcaDAO.buscarTodos();
+
+        for (Marca marca : marcas) {
+            if (marca.getId() == id) {
+                return marca;
+            }
+        }
+        return null;
+    }
+
+    public static Object[] findMarcasInArrayWithId() {
+        List<Marca> marcas = MarcaDAO.buscarTodos();
+        List<String> marcasNomes = new ArrayList<>();
+
+        for (Marca marca : marcas) {
+            marcasNomes.add(marca.getId() + " - " + marca.getNome());
+        }
+
+        return marcasNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }

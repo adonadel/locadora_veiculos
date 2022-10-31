@@ -1,5 +1,6 @@
 package repository;
 
+import model.Adicional;
 import model.Veiculo;
 
 import java.util.ArrayList;
@@ -29,27 +30,42 @@ public final class VeiculoDAO {
 //        return veiculosFiltradas;
 //    }
 
-//    public static Object[] findVeiculosInArray() {
-//        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
-//        List<String> veiculosNomes = new ArrayList<>();
-//
-//        for (Veiculo veiculo : veiculos) {
-//            veiculosNomes.add(veiculo.getNome());
-//        }
-//
-//        return veiculosNomes.toArray();
-//    }
+    public static Object[] findVeiculosInArray() {
+        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
+        List<String> veiculosNomes = new ArrayList<>();
 
-//    public static Object[] findVeiculosInArrayWithId() {
-//        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
-//        List<String> veiculosNomes = new ArrayList<>();
-//
-//        for (Veiculo veiculo : veiculos) {
-//            veiculosNomes.add(veiculo.getId() + " - " + veiculo.getNome());
-//        }
-//
-//        return veiculosNomes.toArray();
-//    }
+        for (Veiculo veiculo : veiculos) {
+            veiculosNomes.add(veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
+        }
+
+        return veiculosNomes.toArray();
+    }
+
+    public static Veiculo findVeiculoById(int id) {
+        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
+
+        for (Veiculo veiculo : veiculos) {
+            if (veiculo.getId() == id) {
+                return veiculo;
+            }
+        }
+        return null;
+    }
+
+    public static Object[] findVeiculosInArrayWithId() {
+        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
+        List<String> veiculosNomes = new ArrayList<>();
+
+        for (Veiculo veiculo : veiculos) {
+            veiculosNomes.add(veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
+        }
+
+        return veiculosNomes.toArray();
+    }
+
+    public static void incluiAdicional(Adicional adicional, Veiculo veiculo) {
+        veiculo.setAdicionais(adicional);
+    }
 
     public static int getTotal() {
         return total;

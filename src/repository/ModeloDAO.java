@@ -40,6 +40,28 @@ public final class ModeloDAO {
         return modelosNomes.toArray();
     }
 
+    public static Modelo findModeloById(int id) {
+        List<Modelo> modelos = ModeloDAO.buscarTodos();
+
+        for (Modelo modelo : modelos) {
+            if (modelo.getId() == id) {
+                return modelo;
+            }
+        }
+        return null;
+    }
+
+    public static Object[] findModeloesInArrayWithId() {
+        List<Modelo> modeloes = ModeloDAO.buscarTodos();
+        List<String> modelosNomes = new ArrayList<>();
+
+        for (Modelo modelo : modelos) {
+            modelosNomes.add(modelo.getId() + " - " + modelo.getNome());
+        }
+
+        return modelosNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }

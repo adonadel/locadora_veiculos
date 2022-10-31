@@ -4,6 +4,8 @@ import model.CategoriaVeiculo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 public class Veiculo{
 
@@ -18,11 +20,10 @@ public class Veiculo{
     private TipoCombustivel tipoCombustivel;
     private String placa;
     private LocalDate ultimaRevisao;
-    private Double pesoSuportado;
-    private Double TrocaOleokm; //ultima troca em km (50.000 foi trocado o oleo)
     private CategoriaVeiculo categoria;
     private TipoVeiculo tipo;
     private Modelo modelo;
+    private List<Adicional> adicionais;
 
     public long getId() {
         return id;
@@ -112,22 +113,6 @@ public class Veiculo{
         this.ultimaRevisao = ultimaRevisao;
     }
 
-    public Double getPesoSuportado() {
-        return pesoSuportado;
-    }
-
-    public void setPesoSuportado(Double pesoSuportado) {
-        this.pesoSuportado = pesoSuportado;
-    }
-
-    public Double getTrocaOleokm() {
-        return TrocaOleokm;
-    }
-
-    public void setTrocaOleokm(Double trocaOleokm) {
-        TrocaOleokm = trocaOleokm;
-    }
-
     public CategoriaVeiculo getCategoria() {
         return categoria;
     }
@@ -150,5 +135,17 @@ public class Veiculo{
 
     public void setModelo(Modelo modelo) {
         this.modelo = modelo;
+    }
+
+    public List<Adicional> getAdicionais() {
+        return adicionais;
+    }
+
+    public void setAdicionais(Adicional adicional) {
+        this.adicionais.add(adicional);
+    }
+
+    public void removeAdicional(Adicional adicional) {
+        this.adicionais.remove(adicional);
     }
 }
