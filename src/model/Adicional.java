@@ -6,7 +6,6 @@ public class Adicional {
     private long id;
     private String nome;
     private String descricao;
-    private BigDecimal valor;
 
     public long getId() {
         return id;
@@ -30,13 +29,5 @@ public class Adicional {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
     }
 }

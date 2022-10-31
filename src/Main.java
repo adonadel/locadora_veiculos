@@ -13,7 +13,7 @@ public class Main {
         Object usuarioLogado = chamaSelecaoUsuario();
         checaSenhaUsuario(usuarioLogado);
     }
-
+    
     /*Pessoas e relacionados*/
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
@@ -346,11 +346,9 @@ public class Main {
         Adicional adicional = new Adicional();
         String nome = JOptionPane.showInputDialog(null, "Informe o adicional: ");
         String descricao = JOptionPane.showInputDialog(null, "Informe a descrição do adicional: ");
-        BigDecimal valor = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog(null, "Informe o valor do adicional: ")));
         adicional.setId(AdicionalDAO.getTotal() + 1);
         adicional.setNome(nome);
         adicional.setDescricao(descricao);
-        adicional.setValor(valor);
         return adicional;
     }
 
@@ -370,10 +368,9 @@ public class Main {
             String[] splitAdicional = nomeAdicional.toString().split(" - ");
             int adicionalId = parseInt(splitAdicional[0]);
             adicional = AdicionalDAO.findAdicionalById(adicionalId);
-            assert veiculo != null;
             VeiculoDAO.incluiAdicional(adicional, veiculo);
-            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um adicional?", "Inclusão de adicionais", JOptionPane.YES_NO_OPTION));
-        }while(continuar == 1);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja selecionar mais um adicional?", "Inclusão de adicionais", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
     }
 
     private static void chamaRemoveAdicionais() {
@@ -437,10 +434,10 @@ public class Main {
     }
 
     private static void chamaMenuRelatorioVeiculosERelacionados() {
-        String[] opcoesMenuCadastro = {"Cadastrar veículo", "Adicionais", "Marca", "Modelo", "Voltar"};
+        String[] opcoesMenu = {"Cadastrar veículo", "Adicionais", "Marca", "Modelo", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu veículos e relacionados",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
 
         switch (menu) {
             case 0:

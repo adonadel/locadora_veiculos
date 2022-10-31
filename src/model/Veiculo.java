@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Veiculo{
@@ -19,7 +20,7 @@ public class Veiculo{
     private CategoriaVeiculo categoria;
     private TipoVeiculo tipo;
     private Modelo modelo;
-    private List<Adicional> adicionais;
+    private List<Adicional> adicionais = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -134,6 +135,7 @@ public class Veiculo{
     }
 
     public void setAdicionais(Adicional adicional) {
+        System.out.println("teste");
         this.adicionais.add(adicional);
     }
 
