@@ -11,6 +11,7 @@ public class Aluguel {
     private LocalDate dataDevolucao;
     private long hodometroInicial;
     private long hodometroFinal;
+    private StatusAluguel status;
     private Pessoa pessoa;
     private Veiculo veiculo;
 
@@ -86,7 +87,20 @@ public class Aluguel {
         this.veiculo = veiculo;
     }
 
+    public StatusAluguel getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAluguel status) {
+        this.status = status;
+    }
+
     public void alugar() {
         
     }
+
+    public void devolver() {
+
+    }
 }
+

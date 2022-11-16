@@ -1,6 +1,7 @@
 package repository;
 
 import model.Adicional;
+import model.TipoVeiculo;
 import model.Veiculo;
 
 import java.util.ArrayList;
@@ -58,6 +59,19 @@ public final class VeiculoDAO {
 
         for (Veiculo veiculo : veiculos) {
             veiculosNomes.add(veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
+        }
+
+        return veiculosNomes.toArray();
+    }
+
+    public static Object[] findVeiculosInArrayByTipoVeiculoWithId(TipoVeiculo tipoVeiculo) {
+        List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
+        List<String> veiculosNomes = new ArrayList<>();
+
+        for (Veiculo veiculo : veiculos) {
+            if (veiculo.getTipo() == tipoVeiculo) {
+                veiculosNomes.add(veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
+            }
         }
 
         return veiculosNomes.toArray();

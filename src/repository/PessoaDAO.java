@@ -40,6 +40,17 @@ public final class PessoaDAO {
         return pessoasNomes.toArray();
     }
 
+    public static Pessoa findPessoaById(int id) {
+        List<Pessoa> pessoas = PessoaDAO.buscarTodos();
+
+        for (Pessoa pessoa : pessoas) {
+            if (pessoa.getId() == id) {
+                return pessoa;
+            }
+        }
+        return null;
+    }
+
     public static Object[] findPessoasInArrayWithId() {
         List<Pessoa> pessoas = PessoaDAO.buscarTodos();
         List<String> pessoasNomes = new ArrayList<>();

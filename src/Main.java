@@ -1,3 +1,4 @@
+import jdk.nashorn.internal.scripts.JO;
 import model.*;
 import repository.*;
 import javax.swing.*;
@@ -441,11 +442,22 @@ public class Main {
 
         switch (menu) {
             case 0:
-                chamaRelatorioVeiculos();
+                int totalModelos = ModeloDAO.getTotal();
+                if (totalModelos > 0){
+                    chamaRelatorioVeiculos();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um modelo para poder cadastrar um veículo", "Menu veículos e relacionados", JOptionPane.INFORMATION_MESSAGE);
+                }
+
                 chamaMenuRelatorioVeiculosERelacionados();
                 break;
             case 1:
-                chamaRelatorioAdicionais();
+                int totalAdicionais = AdicionalDAO.getTotal();
+                if (totalAdicionais > 0){
+                    chamaRelatorioAdicionais();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um veículo para poder cadastrar um adicional", "Menu veículos e relacionados", JOptionPane.INFORMATION_MESSAGE);
+                }
                 chamaMenuRelatorioVeiculosERelacionados();
                 break;
             case 2:
@@ -453,7 +465,12 @@ public class Main {
                 chamaMenuRelatorioVeiculosERelacionados();
                 break;
             case 3:
-                chamaRelatorioModelos();
+                int totalMarcas = MarcaDAO.getTotal();
+                if (totalMarcas > 0){
+                    chamaRelatorioModelos();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre uma marca para poder cadastrar um modelo", "Menu veículos e relacionados", JOptionPane.INFORMATION_MESSAGE);
+                }
                 chamaMenuRelatorioVeiculosERelacionados();
                 break;
             case 4: //Voltar
@@ -523,14 +540,24 @@ public class Main {
                 chamaMenuEnderecosERelacionados();
                 break;
             case 1:
-                Uf estado = chamaCadastroEstado();
-                UfDAO.salvar(estado);
+                int totalPaises = PaisDAO.getTotal();
+                if (totalPaises > 0) {
+                    Uf estado = chamaCadastroEstado();
+                    UfDAO.salvar(estado);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar um estado", "Menu Endereços e relacionados", JOptionPane.INFORMATION_MESSAGE);
+                }
 
                 chamaMenuEnderecosERelacionados();
                 break;
             case 2:
-                Cidade cidade = chamaCadastroCidade();
-                CidadeDAO.salvar(cidade);
+                int totalUfs = UfDAO.getTotal();
+                if (totalUfs > 0){
+                    Cidade cidade = chamaCadastroCidade();
+                    CidadeDAO.salvar(cidade);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar uma pessoa", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+                }
 
                 chamaMenuEnderecosERelacionados();
                 break;
@@ -649,6 +676,39 @@ public class Main {
     }
     /* EnderecosERelacionados */
 
+    /* Aluguel*/
+
+        private static Aluguel chamaCadastroAluguel(int type) {
+            if (type == 1) { //alugar
+                Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
+                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
+                String[] split = nomePessoa.toString().split(" - ");
+                int ufId = parseInt(split[0]);
+                Pessoa Pessoa = PessoaDAO.findPessoaById(ufId);
+
+                TipoVeiculo[] tiposVeiculo = {
+                    TipoVeiculo.CAMINHAO,
+                    TipoVeiculo.CARRO,
+                    TipoVeiculo.MOTO
+                };
+                TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo, tiposVeiculo[0]);
+
+                Object[] veiculos = VeiculoDAO.findVeiculosInArrayByTipoVeiculoWithId(tipoVeiculo);
+                Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+                String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
+                int veiculoId = parseInt(splitVeiculo[0]);
+                Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
+
+                BigDecimal fipe =                                / 5;
+                BigDecimal valor = ((0.05 * (fipe)) / 100) + 50;
+                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: " + valor, "Alugar carro");
+
+            }else { //devolver
+
+            }
+        }
+    /* Aluguel*/
+
     /*Menus principais e relacionados*/
     private static void chamaMenuPrincipal() {
         String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
@@ -679,17 +739,25 @@ public class Main {
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Cadastros",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
-
+        int totalPaises = PaisDAO.getTotal();
         switch (menu) {
             case 0: //cliente
-                chamaMenuCliente();
+                if (totalPaises > 0){
+                    chamaMenuCliente();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar uma pessoa", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+                }
                 chamaMenuCadastros();
                 break;
             case 1: //funcionário
-                Pessoa pessoaFisica = chamaCadastroPessoa(1);
-                PessoaDAO.salvar(pessoaFisica);
-                Funcionario funcionario = chamaCadastroFuncionario(pessoaFisica);
-                FuncionarioDAO.salvar(funcionario);
+                if (totalPaises > 0){
+                    Pessoa pessoaFisica = chamaCadastroPessoa(1);
+                    PessoaDAO.salvar(pessoaFisica);
+                    Funcionario funcionario = chamaCadastroFuncionario(pessoaFisica);
+                    FuncionarioDAO.salvar(funcionario);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar um funcinário", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+                }
                 chamaMenuCadastros();
                 break;
             case 2://veículos e relacionados
@@ -711,12 +779,14 @@ public class Main {
         int menu_processos = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Processos",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
-
+        Aluguel aluguel;
         switch (menu_processos) {
             case 0:
+                aluguel = chamaCadastroAluguel(1); // alugar
                 chamaMenuProcessos();
                 break;
             case 1:
+                aluguel = chamaCadastroAluguel(0); // devolver
                 chamaMenuProcessos();
                 break;
             case 2: //Voltar
