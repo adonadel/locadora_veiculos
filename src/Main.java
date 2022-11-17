@@ -699,13 +699,13 @@ public class Main {
                 int veiculoId = parseInt(splitVeiculo[0]);
                 Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
-                BigDecimal fipe = veiculo.getValorFipe() / 5;
-                BigDecimal valor = ((0.05 * (fipe)) / 100) + 50;
-                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: " + valor, "Alugar carro");
 
             }else { //devolver
 
             }
+            Aluguel aluguel = new Aluguel();
+
+            return aluguel;
         }
     /* Aluguel*/
 
