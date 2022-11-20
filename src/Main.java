@@ -679,12 +679,15 @@ public class Main {
     /* Aluguel*/
 
         private static Aluguel chamaCadastroAluguel(int type) {
+            DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            Aluguel aluguel = new Aluguel();
+
             if (type == 1) { //alugar
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
                 String[] split = nomePessoa.toString().split(" - ");
                 int ufId = parseInt(split[0]);
-                Pessoa Pessoa = PessoaDAO.findPessoaById(ufId);
+                Pessoa pessoa = PessoaDAO.findPessoaById(ufId);
 
                 TipoVeiculo[] tiposVeiculo = {
                     TipoVeiculo.CAMINHAO,
@@ -699,11 +702,25 @@ public class Main {
                 int veiculoId = parseInt(splitVeiculo[0]);
                 Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
+                BigDecimal divisor = new BigDecimal(5);
+                BigDecimal auxFipe veiculo.getValorFipe().divide(divisor);
+                BigDecimal auxCalc BigDecimal.valueOf((auxFipe.multiply(0.05);
+                BigDecimal valor = () / 100) + 50;
+                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: ", "Alugar veículo");
+
+                String auxDataNasc = JOptionPane.showInputDialog(null, "Informe a data de nascimento da pessoa: (DD/MM/AAAA)");
+                DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                dataAluguel = LocalDate.parse(auxDataNasc, pattern);
+
+                aluguel.setPessoa(pessoa);
+                aluguel.setVeiculo(veiculo);
+                aluguel.setDataAluguel(dataAluguel);
+                aluguel.setHodometroInicial(veiculo.getHodometro());
+                aluguel.setValorEstimado(valor);
 
             }else { //devolver
 
             }
-            Aluguel aluguel = new Aluguel();
 
             return aluguel;
         }
