@@ -165,7 +165,12 @@ public class Main {
 
         switch (menu) {
             case 0:
-                chamaMenuVeiculos();
+                try {
+                    chamaMenuVeiculos();
+                } catch (NumberFormatException letraNoInt){
+                    JOptionPane.showMessageDialog(null, "Apenas números são permitidos!!", "Alerta", JOptionPane.ERROR_MESSAGE);
+                    chamaMenuVeiculos();
+                }
                 chamaMenuVeiculosERelacionados();
                 break;
             case 1:
