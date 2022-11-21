@@ -1,6 +1,8 @@
 package repository;
 
 import model.Aluguel;
+import model.Pessoa;
+import model.Veiculo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,5 +19,17 @@ public final class AluguelDAO {
 
     public static int getTotal() {
         return total;
+    }
+
+    public static Aluguel getAluguelByPessoaAndVeiculo(Pessoa pessoa, Veiculo veiculo) {
+        for (Aluguel aluguel : alugueis) {
+            if (aluguel.getPessoa() == pessoa && aluguel.getVeiculo() == veiculo) {
+                return aluguel;
+            }
+        }
+        /*******exception*******/
+        Aluguel aluguel = new Aluguel();
+        return aluguel;
+        /*******exception*******/
     }
 }

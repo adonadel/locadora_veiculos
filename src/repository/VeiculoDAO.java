@@ -69,7 +69,7 @@ public final class VeiculoDAO {
         List<String> veiculosNomes = new ArrayList<>();
 
         for (Veiculo veiculo : veiculos) {
-            if (veiculo.getTipo() == tipoVeiculo) {
+            if (veiculo.getTipo() == tipoVeiculo && !veiculo.isAlugado()) {
                 veiculosNomes.add(veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
             }
         }

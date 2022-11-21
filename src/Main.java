@@ -10,7 +10,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class Main {
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         Object usuarioLogado = chamaSelecaoUsuario();
         checaSenhaUsuario(usuarioLogado);
     }
@@ -32,7 +32,7 @@ public class Main {
         Uf uf = UfDAO.findUfById(ufId);
 
         Object[] nomesCidades = CidadeDAO.findCidadesInArrayWithId();
-        Object nomeCidade = JOptionPane.showInputDialog(null, "Selecione o estado: ", "Cadastro de pessoas", JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades[0]);
+        Object nomeCidade = JOptionPane.showInputDialog(null, "Selecione a cidade: ", "Cadastro de pessoas", JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades[0]);
         String[] splitCidade = nomeCidade.toString().split(" - ");
         int cidadeId = parseInt(splitCidade[0]);
         Cidade cidade = CidadeDAO.findCidadeById(cidadeId);
@@ -680,14 +680,15 @@ public class Main {
 
         private static Aluguel chamaCadastroAluguel(int type) {
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            Aluguel aluguel = new Aluguel();
+            Aluguel aluguel;
+            LocalDate dataAluguel = null;
 
             if (type == 1) { //alugar
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
                 String[] split = nomePessoa.toString().split(" - ");
-                int ufId = parseInt(split[0]);
-                Pessoa pessoa = PessoaDAO.findPessoaById(ufId);
+                int pessoaId = parseInt(split[0]);
+                Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
                 TipoVeiculo[] tiposVeiculo = {
                     TipoVeiculo.CAMINHAO,
@@ -703,23 +704,53 @@ public class Main {
                 Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
                 BigDecimal divisor = new BigDecimal(5);
-                BigDecimal auxFipe veiculo.getValorFipe().divide(divisor);
-                BigDecimal auxCalc BigDecimal.valueOf((auxFipe.multiply(0.05);
-                BigDecimal valor = () / 100) + 50;
-                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: ", "Alugar veículo");
+                BigDecimal fivePercent = BigDecimal.valueOf(0.05);
+                BigDecimal oneHundred = BigDecimal.valueOf(100);
+                BigDecimal fifty = BigDecimal.valueOf(50);
+                BigDecimal auxFipe = veiculo.getValorFipe().divide(divisor);
 
-                String auxDataNasc = JOptionPane.showInputDialog(null, "Informe a data de nascimento da pessoa: (DD/MM/AAAA)");
-                DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                dataAluguel = LocalDate.parse(auxDataNasc, pattern);
+                BigDecimal auxCalc = auxFipe.multiply(fivePercent);
+                BigDecimal auxValor = auxCalc.divide(oneHundred);
+                BigDecimal valor = auxValor.add(fifty);
+                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: " + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
+
+                String auxDataAluguel = JOptionPane.showInputDialog(null, "Informe a data do aluguel: (DD/MM/AAAA)");
+                dataAluguel = LocalDate.parse(auxDataAluguel, pattern);
+
+                aluguel = new Aluguel();
 
                 aluguel.setPessoa(pessoa);
                 aluguel.setVeiculo(veiculo);
                 aluguel.setDataAluguel(dataAluguel);
                 aluguel.setHodometroInicial(veiculo.getHodometro());
                 aluguel.setValorEstimado(valor);
+                aluguel.setStatus(StatusAluguel.ALUGADO);
 
+                veiculo.setAlugado(true);
             }else { //devolver
+                Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
+                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
+                String[] split = nomePessoa.toString().split(" - ");
+                int pessoaId = parseInt(split[0]);
+                Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
+                Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
+                Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+                String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
+                int veiculoId = parseInt(splitVeiculo[0]);
+                Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
+
+                aluguel = AluguelDAO.getAluguelByPessoaAndVeiculo(pessoa, veiculo);
+
+                String[] opcoesDevolver = {"Não", "Sim"};
+                int opt = JOptionPane.showOptionDialog(null, "O condutor teve problemas durante o uso do veículo: ",
+                "Devolver veículo",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesDevolver, opcoesDevolver[0]);
+                if (opt == 0) {
+                    aluguel.setStatus(StatusAluguel.DESALUGADO);
+                }
+
+                veiculo.setAlugado(false);
             }
 
             return aluguel;
@@ -729,6 +760,7 @@ public class Main {
     /*Menus principais e relacionados*/
     private static void chamaMenuPrincipal() {
         String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
+
         int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Principal",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
@@ -851,6 +883,7 @@ public class Main {
             JOptionPane.showMessageDialog(null, "Senha incorreta!");
             checaSenhaUsuario(usuarioLogado);
         }
+
     }
 
     private static Object chamaSelecaoUsuario() {

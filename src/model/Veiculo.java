@@ -21,6 +21,7 @@ public class Veiculo{
     private TipoVeiculo tipo;
     private Modelo modelo;
     private List<Adicional> adicionais = new ArrayList<>();
+    private boolean alugado;
 
     public long getId() {
         return id;
@@ -141,5 +142,13 @@ public class Veiculo{
 
     public void removeAdicional(Adicional adicional) {
         this.adicionais.remove(adicional);
+    }
+
+    public boolean isAlugado() {
+        return alugado;
+    }
+
+    public void setAlugado(boolean alugado) {
+        this.alugado = alugado;
     }
 }
