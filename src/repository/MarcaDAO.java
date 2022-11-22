@@ -11,8 +11,10 @@ public final class MarcaDAO {
     static int total = 0;
 
     public static void salvar(Marca marca) {
-        marcas.add(marca);
-        total++;
+        if (marca.getNome() != null) {
+            marcas.add(marca);
+            total++;
+        }
     }
 
     public static List<Marca> buscarTodos() {

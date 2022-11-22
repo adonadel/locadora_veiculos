@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -167,15 +168,22 @@ public class Main {
             case 0:
                 try {
                     chamaMenuVeiculos();
-                } catch (NumberFormatException letraNoInt){
+                    chamaMenuVeiculosERelacionados();
+                } catch (NumberFormatException letraNoInt) {
                     JOptionPane.showMessageDialog(null, "Apenas números são permitidos!!", "Alerta", JOptionPane.ERROR_MESSAGE);
-                    chamaMenuVeiculos();
+                } catch (DateTimeParseException formatoData) {
+                    JOptionPane.showMessageDialog(null, "Dígite a data no formato correto.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                } catch (ArrayIndexOutOfBoundsException semCadastros) {
+                    JOptionPane.showMessageDialog(null, "Cadastre marca e modelo.", "Alerta", JOptionPane.ERROR_MESSAGE);
                 }
-                chamaMenuVeiculosERelacionados();
                 break;
             case 1:
-                chamaMenuAdicionais();
-                chamaMenuVeiculosERelacionados();
+                try {
+                    chamaMenuAdicionais();
+                    chamaMenuVeiculosERelacionados();
+                } catch (ArrayIndexOutOfBoundsException teste){
+                    JOptionPane.showMessageDialog(null, "Cadastre um veículo antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
             case 2:
                 Marca marca = chamaCadastroMarca();
@@ -183,9 +191,13 @@ public class Main {
                 chamaMenuVeiculosERelacionados();
                 break;
             case 3:
-                Modelo modelo = chamaCadastroModelo();
-                ModeloDAO.salvar(modelo);
-                chamaMenuVeiculosERelacionados();
+                try {
+                    Modelo modelo = chamaCadastroModelo();
+                    ModeloDAO.salvar(modelo);
+                    chamaMenuVeiculosERelacionados();
+                } catch (ArrayIndexOutOfBoundsException semMarca){
+                    JOptionPane.showMessageDialog(null, "Cadastre uma marca antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
             case 4: //Voltar
                 chamaMenuCadastros();
