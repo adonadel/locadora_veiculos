@@ -21,6 +21,7 @@ public final class VeiculoDAO {
         return veiculos;
     }
 
+
 //    public static List<Veiculo> buscarPorNome(String nome) {
 //        List<Veiculo> veiculosFiltradas = new ArrayList<>();
 //        for (Veiculo veiculo : veiculos) {

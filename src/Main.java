@@ -544,7 +544,8 @@ public class Main {
 
     /* Enderecos e relacionados */
     private static void chamaMenuEnderecosERelacionados() {
-        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
+
+        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Menu cadastros"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu Endereços e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
@@ -573,7 +574,7 @@ public class Main {
                     Cidade cidade = chamaCadastroCidade();
                     CidadeDAO.salvar(cidade);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar uma pessoa", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Cadastre um estado para poder cadastrar uma cidade", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
                 }
 
                 chamaMenuEnderecosERelacionados();
@@ -593,8 +594,16 @@ public class Main {
     }
 
     private static Uf chamaCadastroEstado() {
+//        eric
         Uf estado = new Uf();
-        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
+
+        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ", "valor");
+
+//        if(inputValue == null){
+//
+//        }
+
+
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
         Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
@@ -776,6 +785,8 @@ public class Main {
 
     /*Menus principais e relacionados*/
     private static void chamaMenuPrincipal() {
+
+//        kinho
         String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
 
         int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
@@ -812,6 +823,11 @@ public class Main {
                     chamaMenuCliente();
                 }else{
                     JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar uma pessoa", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+
+                    Pais pais = chamaCadastroPais();
+                    PaisDAO.salvar(pais);
+
+                    chamaMenuEnderecosERelacionados();
                 }
                 chamaMenuCadastros();
                 break;
@@ -823,6 +839,11 @@ public class Main {
                     FuncionarioDAO.salvar(funcionario);
                 }else{
                     JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar um funcinário", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
+
+                    Pais pais = chamaCadastroPais();
+                    PaisDAO.salvar(pais);
+
+                    chamaMenuEnderecosERelacionados();
                 }
                 chamaMenuCadastros();
                 break;
