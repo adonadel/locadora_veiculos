@@ -1,6 +1,7 @@
 package repository;
 
 import model.Cliente;
+import model.Pessoa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,19 @@ public final class ClienteDAO {
         return clientesNomes.toArray();
     }
 
+    public static Cliente findClienteByPessoa(Pessoa pessoa){
+
+        for (Cliente cliente : clientes) {
+           if(cliente.getPessoa() == pessoa){
+               return cliente;
+           }
+        }
+        return null;
+    }
+
     public static int getTotal() {
         return total;
     }
+
+
 }

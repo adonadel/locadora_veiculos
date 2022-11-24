@@ -48,7 +48,19 @@ public class Main {
         if (tipoPessoa == 1) {
             tipoDocumento = "CNPJ";
         }else{
-            CNH = JOptionPane.showInputDialog(null, "Informe a CNH da pessoa: ");
+
+            TipoCarteira[] tiposCarteira = {
+                    TipoCarteira.A,
+                    TipoCarteira.B,
+                    TipoCarteira.C,
+                    TipoCarteira.AB,
+                    TipoCarteira.ABC
+            };
+
+            TipoCarteira tipoCarteira = (TipoCarteira) JOptionPane.showInputDialog(null, "Informe o tipo da sua CNH:","Cadastrar Pessoa", JOptionPane.DEFAULT_OPTION, null, tiposCarteira, tiposCarteira[0]);
+
+
+            CNH = JOptionPane.showInputDialog(null, "Informe o número da CNH da pessoa: ");
             String auxDataNasc = JOptionPane.showInputDialog(null, "Informe a data de nascimento da pessoa: (DD/MM/AAAA)");
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             dataNasc = LocalDate.parse(auxDataNasc, pattern);
@@ -254,6 +266,7 @@ public class Main {
             TipoCombustivel.GASOLINA_PREMIUM,
             TipoCombustivel.GNV
         };
+
         TipoCombustivel tipoCombustivel = (TipoCombustivel) JOptionPane.showInputDialog(null, "Seleciona o tipo de combustível do veículo: ", "Cadastro de veículo", JOptionPane.DEFAULT_OPTION, null, tipoCombustiveis, tipoCombustiveis[0]);
         String placa = JOptionPane.showInputDialog(null, "Informe a placa do veículo: ");
         String auxUltimaRevisao = JOptionPane.showInputDialog(null, "Informe a data da última revisão (DD/MM/AAAA) do veículo: ");
@@ -716,11 +729,25 @@ public class Main {
                 int pessoaId = parseInt(split[0]);
                 Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
-                TipoVeiculo[] tiposVeiculo = {
-                    TipoVeiculo.CAMINHAO,
-                    TipoVeiculo.CARRO,
-                    TipoVeiculo.MOTO
-                };
+                Cliente cliente = ClienteDAO.findClienteByPessoa(pessoa);
+
+                TipoVeiculo[] tiposVeiculo = new TipoVeiculo[3];
+
+                if(cliente.getTipoCarteira() == TipoCarteira.A){
+                  tiposVeiculo[0] = TipoVeiculo.MOTO;
+                }else if(cliente.getTipoCarteira() == TipoCarteira.B){
+                   tiposVeiculo[0] = TipoVeiculo.CARRO;
+                }else if(cliente.getTipoCarteira() == TipoCarteira.C){
+                    tiposVeiculo[0] = TipoVeiculo.CAMINHAO;
+                }else if(cliente.getTipoCarteira() == TipoCarteira.AB){
+                    tiposVeiculo[0] = TipoVeiculo.MOTO;
+                    tiposVeiculo[1] = TipoVeiculo.CARRO;
+                } else {
+                    tiposVeiculo[0] = TipoVeiculo.MOTO;
+                    tiposVeiculo[1] = TipoVeiculo.CARRO;
+                    tiposVeiculo[2] = TipoVeiculo.CAMINHAO;
+                }
+
                 TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo, tiposVeiculo[0]);
 
                 Object[] veiculos = VeiculoDAO.findVeiculosInArrayByTipoVeiculoWithId(tipoVeiculo);
