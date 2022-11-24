@@ -175,7 +175,7 @@ public class Main {
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu veículos e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
-
+ 
         switch (menu) {
             case 0:
                 try {
