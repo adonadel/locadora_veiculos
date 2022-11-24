@@ -8,6 +8,7 @@ import java.util.List;
 public final class UsuarioDAO {
 
     public static List<Usuario> findUsuariosSistema() {
+        /*Teste Bianca*/
         List<Usuario> usuarios = new ArrayList<>();
 
         Usuario usuario = new Usuario();
