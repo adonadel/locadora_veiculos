@@ -8,7 +8,15 @@ import java.util.List;
 public final class PaisDAO {
 
     static List<Pais> paises = new ArrayList<>();
-    static int total = 0;
+    static int total = 1;
+
+    public static void initPaises() {
+        Pais pais = new Pais();
+
+        pais.setId(total);
+        pais.setNome("Brasil");
+        salvar(pais);
+    }
 
     public static void salvar(Pais pais) {
         paises.add(pais);

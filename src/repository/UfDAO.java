@@ -1,14 +1,41 @@
 package repository;
 
+import model.Pais;
 import model.Uf;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class UfDAO {
 
     static List<Uf> ufs = new ArrayList<>();
-    static int total = 0;
+    static int total = 1;
+
+    public static void initUfs() {
+        List<String> names = Arrays.asList(
+              "Paraná",
+              "Rio Grande do Sul",
+              "Santa Catarina"
+        );
+
+        String[] siglas = new String[]{
+            "PR",
+            "RS",
+            "SC",
+        };
+
+        Pais pais = PaisDAO.findPaisById(1);
+
+        for (String name: names) {
+            Uf uf = new Uf();
+            uf.setId(total);
+            uf.setSigla(siglas[total-1]);
+            uf.setNome(name);
+            uf.setPais(pais);
+            salvar(uf);
+        }
+    }
 
     public static void salvar(Uf uf) {
         ufs.add(uf);
@@ -64,5 +91,16 @@ public final class UfDAO {
 
     public static int getTotal() {
         return total;
+    }
+
+    public static Uf findUfBySigla(String sigla) {
+        List<Uf> ufs = UfDAO.buscarTodos();
+
+        for (Uf uf : ufs) {
+            if (uf.getSigla().equals(sigla)) {
+                return uf;
+            }
+        }
+        return null;
     }
 }

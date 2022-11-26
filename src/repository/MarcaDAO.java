@@ -3,12 +3,33 @@ package repository;
 import model.Marca;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class MarcaDAO {
 
     static List<Marca> marcas = new ArrayList<>();
-    static int total = 0;
+    static int total = 1;
+
+    public static void initMarcas() {
+        List<String> names = Arrays.asList(
+              "Audi",
+              "BMW",
+              "Chevrolet",
+              "Fiat",
+              "Ford",
+              "Honda",
+              "Mercedes",
+              "Mercedes-Benz"
+        );
+
+        for (String name: names) {
+            Marca marca = new Marca();
+            marca.setId(total);
+            marca.setNome(name);
+            salvar(marca);
+        }
+    }
 
     public static void salvar(Marca marca) {
         if (marca.getNome() != null) {
@@ -62,6 +83,18 @@ public final class MarcaDAO {
         }
 
         return marcasNomes.toArray();
+    }
+
+    public static Marca findMarcasByName(String name) {
+
+        List<Marca> marcas = MarcaDAO.buscarTodos();
+
+        for (Marca marca : marcas) {
+            if (marca.getNome().equals(name)) {
+                return marca;
+            }
+        }
+        return null;
     }
 
     public static int getTotal() {

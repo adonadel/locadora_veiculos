@@ -3,12 +3,32 @@ package repository;
 import model.Adicional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class AdicionalDAO {
 
     static List<Adicional> adicionais = new ArrayList<>();
     static int total = 0;
+
+
+    public static void initAdicionais() {
+        List<String> names = Arrays.asList(
+            "Ar condicionado",
+            "Freio ABS",
+            "Vidro elétrico"
+        );
+
+        for (String name: names) {
+            Adicional adicional = new Adicional();
+
+            adicional.setId(total);
+            adicional.setNome(name);
+            adicional.setDescricao("");
+
+            salvar(adicional);
+        }
+    }
 
     public static void salvar(Adicional adicional) {
         adicionais.add(adicional);

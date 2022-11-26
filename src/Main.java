@@ -12,8 +12,16 @@ import static java.lang.Integer.parseInt;
 
 public class Main {
      public static void main(String[] args) {
+         initAll(); //Inicializar as models bases para cadastro
         Object usuarioLogado = chamaSelecaoUsuario();
         checaSenhaUsuario(usuarioLogado);
+    }
+    private static void initAll() {
+         PaisDAO.initPaises();
+         UfDAO.initUfs();
+         CidadeDAO.initCidades();
+         MarcaDAO.initMarcas();
+         ModeloDAO.initModelos();
     }
     
     /*Pessoas e relacionados*/
@@ -32,7 +40,8 @@ public class Main {
         int ufId = parseInt(splitUf[0]);
         Uf uf = UfDAO.findUfById(ufId);
 
-        Object[] nomesCidades = CidadeDAO.findCidadesInArrayWithId();
+        assert uf != null;
+        Object[] nomesCidades = CidadeDAO.findCidadesInArrayWithIdBySigla(uf.getSigla());
         Object nomeCidade = JOptionPane.showInputDialog(null, "Selecione a cidade: ", "Cadastro de pessoas", JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades[0]);
         String[] splitCidade = nomeCidade.toString().split(" - ");
         int cidadeId = parseInt(splitCidade[0]);
@@ -558,7 +567,7 @@ public class Main {
     /* Enderecos e relacionados */
     private static void chamaMenuEnderecosERelacionados() {
 
-        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Menu cadastros"};
+        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu Endereços e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
@@ -607,16 +616,9 @@ public class Main {
     }
 
     private static Uf chamaCadastroEstado() {
-//        eric
         Uf estado = new Uf();
 
-        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ", "valor");
-
-//        if(inputValue == null){
-//
-//        }
-
-
+        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
         Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
@@ -812,8 +814,6 @@ public class Main {
 
     /*Menus principais e relacionados*/
     private static void chamaMenuPrincipal() {
-
-//        kinho
         String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
 
         int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
