@@ -225,6 +225,7 @@ public class Main {
                 break;
         }
     }
+    
 
     private static void chamaMenuVeiculos() {
         String[] opcoesMenuCadastro = {"Caminhão", "Carro", "Moto", "Voltar"};
