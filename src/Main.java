@@ -22,7 +22,7 @@ public class Main {
          MarcaDAO.initMarcas();
          ModeloDAO.initModelos();
     }
-    
+       
     /*Pessoas e relacionados*/
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
