@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDate;
 
-public class Marca {
+public class  Marca {
     private Integer id;
     private String nome;
 

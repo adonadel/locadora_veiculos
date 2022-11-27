@@ -332,11 +332,14 @@ public class Main {
             case 1: //carro
                 veiculo = chamaCadastroVeiculo(1);
                 VeiculoDAO.salvar(veiculo);
+
                 chamaMenuVeiculos();
                 break;
             case 2: //moto
                 veiculo = chamaCadastroVeiculo(2);
                 VeiculoDAO.salvar(veiculo);
+
+                chamaMenuVeiculos();
                 break;
             case 3:
                 chamaMenuVeiculosERelacionados();
@@ -386,7 +389,7 @@ public class Main {
         long id = VeiculoDAO.getTotal() + 1;
         Veiculo veiculo = new Veiculo();
         switch (tipoVeiculo){
-            case 1:
+            case 0:
                 Caminhao caminhao = new Caminhao();
                 caminhao.setId(id);
                 caminhao.setAnoFabricacao(anoFabricacao);
@@ -404,7 +407,7 @@ public class Main {
 
                 veiculo = caminhao;
                 break;
-            case 2:
+            case 1:
                 Carro carro = new Carro();
                 carro.setId(id);
                 carro.setAnoFabricacao(anoFabricacao);
@@ -422,7 +425,7 @@ public class Main {
 
                 veiculo = carro;
                 break;
-            case 3:
+            case 2:
                 Moto moto = new Moto();
                 moto.setId(id);
                 moto.setAnoFabricacao(anoFabricacao);
@@ -821,24 +824,11 @@ public class Main {
                 int pessoaId = parseInt(split[0]);
                 Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
-                Cliente cliente = ClienteDAO.findClienteByPessoa(pessoa);
-
-                TipoVeiculo[] tiposVeiculo = new TipoVeiculo[3];
-
-                if(cliente.getTipoCarteira() == TipoCarteira.A){
-                  tiposVeiculo[0] = TipoVeiculo.MOTO;
-                }else if(cliente.getTipoCarteira() == TipoCarteira.B){
-                   tiposVeiculo[0] = TipoVeiculo.CARRO;
-                }else if(cliente.getTipoCarteira() == TipoCarteira.C){
-                    tiposVeiculo[0] = TipoVeiculo.CAMINHAO;
-                }else if(cliente.getTipoCarteira() == TipoCarteira.AB){
-                    tiposVeiculo[0] = TipoVeiculo.MOTO;
-                    tiposVeiculo[1] = TipoVeiculo.CARRO;
-                } else {
-                    tiposVeiculo[0] = TipoVeiculo.MOTO;
-                    tiposVeiculo[1] = TipoVeiculo.CARRO;
-                    tiposVeiculo[2] = TipoVeiculo.CAMINHAO;
-                }
+                TipoVeiculo[] tiposVeiculo = {
+                                    TipoVeiculo.CAMINHAO,
+                                    TipoVeiculo.CARRO,
+                                    TipoVeiculo.MOTO
+                                };
 
                 TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo, tiposVeiculo[0]);
 
@@ -857,7 +847,7 @@ public class Main {
                 BigDecimal auxCalc = auxFipe.multiply(fivePercent);
                 BigDecimal auxValor = auxCalc.divide(oneHundred);
                 BigDecimal valor = auxValor.add(fifty);
-                JOptionPane.showMessageDialog(null, "O valor a ser pago no aluguel será de: " + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "O valor diario a ser pago no aluguel será de: " + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
 
                 String auxDataAluguel = JOptionPane.showInputDialog(null, "Informe a data do aluguel: (DD/MM/AAAA)");
                 dataAluguel = LocalDate.parse(auxDataAluguel, pattern);
