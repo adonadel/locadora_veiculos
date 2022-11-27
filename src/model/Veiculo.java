@@ -21,6 +21,7 @@ public class Veiculo{
     private TipoVeiculo tipo;
     private Modelo modelo;
     private List<Adicional> adicionais = new ArrayList<>();
+    private List<Sinistro> sinistros = new ArrayList<>();
     private boolean alugado;
 
     public long getId() {
@@ -41,6 +42,9 @@ public class Veiculo{
 
     public void setAdicionais(List<Adicional> adicionais) {
         this.adicionais = adicionais;
+    }
+    public void setSinistros(List<Sinistro> sinistros) {
+        this.sinistros = sinistros;
     }
 
     public long getNumeroSerie() {
@@ -135,6 +139,10 @@ public class Veiculo{
         return adicionais;
     }
 
+    public List<Sinistro> getSinistros() {
+        return sinistros;
+    }
+
     public void setAdicionais(Adicional adicional) {
         System.out.println("teste");
         this.adicionais.add(adicional);
@@ -150,5 +158,12 @@ public class Veiculo{
 
     public void setAlugado(boolean alugado) {
         this.alugado = alugado;
+    }
+
+    public void setSinistros(Sinistro sinistro) {
+        this.sinistros.add(sinistro);
+    }
+    public void removeSinistro(Sinistro sinistro){
+        this.sinistros.remove(sinistro);
     }
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import model.Adicional;
+import model.Sinistro;
 import model.TipoVeiculo;
 import model.Veiculo;
 
@@ -85,6 +86,12 @@ public final class VeiculoDAO {
     public static void removeAdicional(Adicional adicional, Veiculo veiculo) {
         veiculo.removeAdicional(adicional);
     }
+
+    public static void incluiSinistro(Sinistro sinistro, Veiculo veiculo){
+        veiculo.setSinistros(sinistro);
+    }
+
+    public static void removeSinistro(Sinistro sinistro, Veiculo veiculo){ veiculo.removeSinistro(sinistro);}
 
     public static int getTotal() {
         return total;
