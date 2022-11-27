@@ -748,7 +748,7 @@ public class Main {
         switch (menu) {
             case 0:
                 chamaRelatorioPais();
-                chamaMenuRelatorioEnderecos();
+                //chamaMenuRelatorioEnderecos();
                 break;
             case 1:
                 chamaRelatorioUf();
@@ -765,18 +765,8 @@ public class Main {
     }
 
     private static void chamaRelatorioPais() {
-
-        String listaPais = "";
-
-        List<Pais> paises = PaisDAO.buscarTodos();
-
-        listaPais += "Lista de paises";
-
-        for (Pais pais : paises) {
-            listaPais += "\n" + pais.getId() + " - " + pais.getNome();
-        }
-
-        JOptionPane.showMessageDialog(null, listaPais);
+        List<Pais> pais = getPaisDAO().buscarTodos();
+        RelatorioPaisForm.emitirRelatorio(pais);
     }
 
     private static void chamaRelatorioUf() {
@@ -811,7 +801,6 @@ public class Main {
     /* EnderecosERelacionados */
 
     /* Aluguel*/
-
         private static Aluguel chamaCadastroAluguel(int type) {
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             Aluguel aluguel;
@@ -889,6 +878,11 @@ public class Main {
             }
 
             return aluguel;
+        }
+
+        private static void chamaMenuRelatorioAluguel() {
+            List<Aluguel> aluguel = AluguelDAO.buscarTodos();
+            RelatorioAluguelForm.emitirRelatorio(aluguel);
         }
     /* Aluguel*/
 
@@ -989,8 +983,8 @@ public class Main {
         }
     }
 
-    private static void chamaMenuRelatorios() {
-        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Voltar"};
+    public static void chamaMenuRelatorios() {
+        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Aluguel", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Relatórios",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
@@ -1008,11 +1002,15 @@ public class Main {
                 chamaMenuRelatorioVeiculosERelacionados();
                 chamaMenuRelatorios();
                 break;
-            case 3: //Voltar
+            case 3: //Endereços
                 chamaMenuRelatorioEnderecos();
+                //chamaMenuRelatorios();
+                break;
+            case 4: //Aluguel
+                chamaMenuRelatorioAluguel();
                 chamaMenuRelatorios();
                 break;
-            case 4: //Voltar
+            case 5: //Voltar
                 chamaMenuPrincipal();
                 break;
         }
@@ -1039,4 +1037,9 @@ public class Main {
         return selection;
     }
     /*Menus principais e relacionados*/
+
+    public static PaisDAO getPaisDAO() {
+        PaisDAO paisDAO = new PaisDAO();
+        return paisDAO;
+    }
 }

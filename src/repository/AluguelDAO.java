@@ -1,6 +1,7 @@
 package repository;
 
 import model.Aluguel;
+import model.Marca;
 import model.Pessoa;
 import model.Veiculo;
 
@@ -31,5 +32,10 @@ public final class AluguelDAO {
         Aluguel aluguel = new Aluguel();
         return aluguel;
         /*******exception*******/
+    }
+
+    public static List<Aluguel> buscarTodos() {
+        System.out.println(alugueis);
+        return alugueis;
     }
 }
