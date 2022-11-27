@@ -1,4 +1,3 @@
-import jdk.nashorn.internal.scripts.JO;
 import model.*;
 import repository.*;
 import javax.swing.*;
@@ -12,10 +11,18 @@ import static java.lang.Integer.parseInt;
 
 public class Main {
      public static void main(String[] args) {
+        initAll(); //Inicializar as models bases para cadastro
         Object usuarioLogado = chamaSelecaoUsuario();
         checaSenhaUsuario(usuarioLogado);
     }
-    
+    private static void initAll() {
+         PaisDAO.initPaises();
+         UfDAO.initUfs();
+         CidadeDAO.initCidades();
+         MarcaDAO.initMarcas();
+         ModeloDAO.initModelos();
+    }
+
     /*Pessoas e relacionados*/
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
@@ -32,7 +39,8 @@ public class Main {
         int ufId = parseInt(splitUf[0]);
         Uf uf = UfDAO.findUfById(ufId);
 
-        Object[] nomesCidades = CidadeDAO.findCidadesInArrayWithId();
+        assert uf != null;
+        Object[] nomesCidades = CidadeDAO.findCidadesInArrayWithIdBySigla(uf.getSigla());
         Object nomeCidade = JOptionPane.showInputDialog(null, "Selecione a cidade: ", "Cadastro de pessoas", JOptionPane.QUESTION_MESSAGE, null, nomesCidades, nomesCidades[0]);
         String[] splitCidade = nomeCidade.toString().split(" - ");
         int cidadeId = parseInt(splitCidade[0]);
@@ -171,7 +179,7 @@ public class Main {
 
     /*Veículos e relacionados*/
     private static void chamaMenuVeiculosERelacionados() {
-        String[] opcoesMenuCadastro = {"Cadastrar veículo", "Adicionais", "Marca", "Modelo", "Voltar"};
+        String[] opcoesMenuCadastro = {"Cadastrar veículo", "Adicionais", "Sinistro",  "Marca", "Modelo", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu veículos e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
@@ -197,12 +205,19 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "Cadastre um veículo antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
-            case 2:
+            case 2: //eric to aqui
+                try {
+                    chamaMenuSinistro();
+                } catch (ArrayIndexOutOfBoundsException teste){
+                    JOptionPane.showMessageDialog(null, "Cadastre um veículo antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case 3:
                 Marca marca = chamaCadastroMarca();
                 MarcaDAO.salvar(marca);
                 chamaMenuVeiculosERelacionados();
                 break;
-            case 3:
+            case 4:
                 try {
                     Modelo modelo = chamaCadastroModelo();
                     ModeloDAO.salvar(modelo);
@@ -211,11 +226,95 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "Cadastre uma marca antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
-            case 4: //Voltar
+            case 5: //Voltar
                 chamaMenuCadastros();
                 break;
         }
     }
+
+//    aqui2
+    public static void chamaMenuSinistro(){
+        String[] opcoesMenuCadastro = {"Cadastrar sinistro", "Incluir em um veículo", "Remover de um veículo", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+                "Menu cadastro de sinistros",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
+        switch (menu) {
+            case 0: //cadastro
+                Sinistro sinistro = chamaCadastroSinistro();
+                SinistroDAO.salvar(sinistro);
+                chamaMenuSinistro();
+                break;
+            case 1: //incluir em um veículo
+                chamaIncluiSinistros();
+                chamaMenuSinistro();
+                break;
+            case 2: //remover de um veículo
+                chamaRemoveSinistros();
+                chamaMenuSinistro();
+                break;
+            case 3:
+                chamaMenuVeiculosERelacionados();
+                break;
+            case 4: //voltar
+                chamaMenuRelatorios();
+                break;
+        }
+
+    }
+
+    private static Sinistro chamaCadastroSinistro() {
+        Sinistro sinistro = new Sinistro();
+        String nome = JOptionPane.showInputDialog(null, "Informe o sinistro: ");
+        String descricao = JOptionPane.showInputDialog(null, "Informe a descrição do sinistro: ");
+        sinistro.setId(SinistroDAO.getTotal() + 1);
+        sinistro.setNome(nome);
+        sinistro.setDescricao(descricao);
+        return sinistro;
+    }
+
+    private static void chamaIncluiSinistros() {
+
+        Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
+        Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Inclusão de sinistros", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+        String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
+        int veiculoId = parseInt(splitVeiculo[0]);
+        Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
+
+        int continuar;
+        Sinistro sinistro;
+        do {
+            Object[] listSinistros = SinistroDAO.findSinistrosInArrayWithId();
+            Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistros: ", "Inclusão de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
+            String[] splitSinistro = nomeSinistro.toString().split(" - ");
+            int sinistroId = parseInt(splitSinistro[0]);
+            sinistro = SinistroDAO.findSinistroById(sinistroId);
+            VeiculoDAO.incluiSinistro(sinistro, veiculo);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
+    }
+
+    private static void chamaRemoveSinistros() {
+
+        Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
+        Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+        String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
+        int veiculoId = parseInt(splitVeiculo[0]);
+        Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
+
+        int continuar = 1;
+        Sinistro sinistro;
+        do {
+            Object[] listSinistros = SinistroDAO.findSinistrosInArray();
+            Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistro: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
+            String[] splitSinistro = nomeSinistro.toString().split(" - ");
+            int sinistroId = parseInt(splitSinistro[0]);
+
+            sinistro = SinistroDAO.findSinistroById(sinistroId);
+            VeiculoDAO.removeSinistro(sinistro, veiculo);
+            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.YES_NO_OPTION));
+        }while(continuar == 0);
+    }
+//-------------- kinho --------
 
     private static void chamaMenuVeiculos() {
         String[] opcoesMenuCadastro = {"Caminhão", "Carro", "Moto", "Voltar"};
@@ -558,7 +657,7 @@ public class Main {
     /* Enderecos e relacionados */
     private static void chamaMenuEnderecosERelacionados() {
 
-        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Menu cadastros"};
+        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
                 "Menu Endereços e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
@@ -607,16 +706,9 @@ public class Main {
     }
 
     private static Uf chamaCadastroEstado() {
-//        eric
         Uf estado = new Uf();
 
-        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ", "valor");
-
-//        if(inputValue == null){
-//
-//        }
-
-
+        String nome = JOptionPane.showInputDialog(null, "Informe o nome do estado: ");
         String sigla = JOptionPane.showInputDialog(null, "Informe a sigla do estado: ");
         Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
@@ -653,7 +745,7 @@ public class Main {
         switch (menu) {
             case 0:
                 chamaRelatorioPais();
-                chamaMenuRelatorioEnderecos();
+                //chamaMenuRelatorioEnderecos();
                 break;
             case 1:
                 chamaRelatorioUf();
@@ -670,18 +762,8 @@ public class Main {
     }
 
     private static void chamaRelatorioPais() {
-
-        String listaPais = "";
-
-        List<Pais> paises = PaisDAO.buscarTodos();
-
-        listaPais += "Lista de paises";
-
-        for (Pais pais : paises) {
-            listaPais += "\n" + pais.getId() + " - " + pais.getNome();
-        }
-
-        JOptionPane.showMessageDialog(null, listaPais);
+        List<Pais> pais = getPaisDAO().buscarTodos();
+        RelatorioPaisForm.emitirRelatorio(pais);
     }
 
     private static void chamaRelatorioUf() {
@@ -716,7 +798,6 @@ public class Main {
     /* EnderecosERelacionados */
 
     /* Aluguel*/
-
         private static Aluguel chamaCadastroAluguel(int type) {
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             Aluguel aluguel;
@@ -808,12 +889,15 @@ public class Main {
 
             return aluguel;
         }
+
+        private static void chamaMenuRelatorioAluguel() {
+            List<Aluguel> aluguel = AluguelDAO.buscarTodos();
+            RelatorioAluguelForm.emitirRelatorio(aluguel);
+        }
     /* Aluguel*/
 
     /*Menus principais e relacionados*/
     private static void chamaMenuPrincipal() {
-
-//        kinho
         String[] opcoesMenu = {"Cadastros", "Processos", "Relatorios", "Sair"};
 
         int opcao = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
@@ -909,8 +993,8 @@ public class Main {
         }
     }
 
-    private static void chamaMenuRelatorios() {
-        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Voltar"};
+    public static void chamaMenuRelatorios() {
+        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Aluguel", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
                 "Menu Relatórios",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
@@ -928,11 +1012,15 @@ public class Main {
                 chamaMenuRelatorioVeiculosERelacionados();
                 chamaMenuRelatorios();
                 break;
-            case 3: //Voltar
+            case 3: //Endereços
                 chamaMenuRelatorioEnderecos();
+                //chamaMenuRelatorios();
+                break;
+            case 4: //Aluguel
+                chamaMenuRelatorioAluguel();
                 chamaMenuRelatorios();
                 break;
-            case 4: //Voltar
+            case 5: //Voltar
                 chamaMenuPrincipal();
                 break;
         }
@@ -959,4 +1047,9 @@ public class Main {
         return selection;
     }
     /*Menus principais e relacionados*/
+
+    public static PaisDAO getPaisDAO() {
+        PaisDAO paisDAO = new PaisDAO();
+        return paisDAO;
+    }
 }
