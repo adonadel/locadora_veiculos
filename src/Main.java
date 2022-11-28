@@ -2,6 +2,7 @@ import model.*;
 import repository.*;
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -12,12 +13,6 @@ import static java.lang.Integer.parseInt;
 
 public class Main {
      public static void main(String[] args) {
-        List<TipoVeiculo> tiposVeiculo = new ArrayList<>();
-        tiposVeiculo.add(TipoVeiculo.CAMINHAO);
-        tiposVeiculo.add(TipoVeiculo.CARRO);
-        System.out.println(tiposVeiculo.get(0));
-        System.exit(0);
-
         initAll(); //Inicializar as models bases para cadastro
         Object usuarioLogado = chamaSelecaoUsuario();
         checaSenhaUsuario(usuarioLogado);
@@ -844,7 +839,7 @@ public class Main {
                 }
 
 
-                TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, new List[]{tiposVeiculo}, tiposVeiculo.get(0));
+                TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo.toArray(), tiposVeiculo.get(0));
 
                 Object[] veiculos = VeiculoDAO.findVeiculosInArrayByTipoVeiculoWithId(tipoVeiculo);
                 Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
