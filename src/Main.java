@@ -2,12 +2,14 @@ import model.*;
 import repository.*;
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static java.time.temporal.ChronoUnit.*;
 
 public class Main {
      public static void main(String[] args) {
@@ -835,8 +837,8 @@ public class Main {
 
                 BigDecimal auxCalc = auxFipe.multiply(fivePercent);
                 BigDecimal auxValor = auxCalc.divide(oneHundred);
-                BigDecimal valor = auxValor.add(fifty);
-                JOptionPane.showMessageDialog(null, "O valor diario a ser pago no aluguel será de: " + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
+                BigDecimal valor = auxValor.add(fifty).setScale(2, RoundingMode.HALF_EVEN);
+                JOptionPane.showMessageDialog(null, "O valor diario a ser pago no aluguel será de: R$" + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
 
                 String auxDataAluguel = JOptionPane.showInputDialog(null, "Informe a data do aluguel: (DD/MM/AAAA)");
                 dataAluguel = LocalDate.parse(auxDataAluguel, pattern);
@@ -851,6 +853,7 @@ public class Main {
                 aluguel.setStatus(StatusAluguel.ALUGADO);
 
                 veiculo.setAlugado(true);
+                AluguelDAO.salvar(aluguel);
             }else { //devolver
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
@@ -865,6 +868,11 @@ public class Main {
                 Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
                 aluguel = AluguelDAO.getAluguelByPessoaAndVeiculo(pessoa, veiculo);
+
+                aluguel.setDataDevolucao(LocalDate.now());
+                BigDecimal daysLocated = BigDecimal.valueOf(DAYS.between(aluguel.getDataAluguel(), aluguel.getDataDevolucao())).add(BigDecimal.valueOf(2));
+                aluguel.setValorFinal(aluguel.getValorEstimado().multiply(daysLocated).setScale(2, RoundingMode.HALF_EVEN));
+                JOptionPane.showMessageDialog(null, "O valor final foi de R$" + aluguel.getValorFinal(), "Devolver veículo", JOptionPane.INFORMATION_MESSAGE);
 
                 String[] opcoesDevolver = {"Não", "Sim"};
                 int opt = JOptionPane.showOptionDialog(null, "O condutor teve problemas durante o uso do veículo: ",
