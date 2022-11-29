@@ -28,13 +28,13 @@ public class RelatorioAluguelForm extends JPanel {
             table.setModel(tabela);
             table.setSurrendersFocusOnKeystroke(true);
             scroller = new javax.swing.JScrollPane(table);
-            table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));
+            table.setPreferredScrollableViewportSize(new java.awt.Dimension(800, 900));
         }
 
         public static void emitirRelatorio(List<Aluguel> alugueis) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                JFrame frame = new JFrame("Relatório");
+                JFrame frame = new JFrame("Relatório Aluguel");
 
                 frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent evt) {
@@ -42,6 +42,7 @@ public class RelatorioAluguelForm extends JPanel {
                         Main.chamaMenuRelatorios();
                     }
                 });
+
                 Vector<Aluguel> vetorDados = new Vector<Aluguel>();
                 for (Aluguel aluguel : alugueis) {
                     vetorDados.add(aluguel);

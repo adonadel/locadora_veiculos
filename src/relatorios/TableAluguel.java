@@ -19,6 +19,8 @@ public class TableAluguel extends AbstractTableModel {
     public static final int INDEX_STATUS = 7;
     public static final int INDEX_PESSOA = 8;
     public static final int INDEX_VEICULO = 9;
+    public static final int INDEX_ESCONDIDO = 10;
+
     protected String[] nomeColunas;
     protected Vector<Aluguel> vetorDados;
 
@@ -30,6 +32,15 @@ public class TableAluguel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return nomeColunas[column];
+    }
+
+    @Override
+    public boolean isCellEditable(int linha, int coluna) {
+        if (coluna == INDEX_ESCONDIDO) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override

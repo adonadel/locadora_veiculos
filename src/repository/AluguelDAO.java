@@ -1,15 +1,11 @@
 package repository;
 
-import model.Aluguel;
-import model.Marca;
-import model.Pessoa;
-import model.Veiculo;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class AluguelDAO {
-
     static List<Aluguel> alugueis = new ArrayList<>();
     static int total = 0;
 

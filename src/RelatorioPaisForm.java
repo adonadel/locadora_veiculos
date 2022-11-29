@@ -10,7 +10,6 @@ import java.util.Vector;
 public class RelatorioPaisForm extends JPanel{
         private static final long serialVersionUID = 1L;
         public static final String[] nomeColunas = {"ID", "Nome"};
-
         protected JTable table;
         protected JScrollPane scroller;
         protected TablePais tabela;
@@ -25,13 +24,13 @@ public class RelatorioPaisForm extends JPanel{
             table.setModel(tabela);
             table.setSurrendersFocusOnKeystroke(true);
             scroller = new javax.swing.JScrollPane(table);
-            table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));
+            table.setPreferredScrollableViewportSize(new java.awt.Dimension(900, 800));
         }
 
         public static void emitirRelatorio(List<Pais> paises) {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-                JFrame frame = new JFrame("Relatório");
+                JFrame frame = new JFrame("Relatório País");
 
                 frame.addWindowListener(new WindowAdapter() {
                     public void windowClosing(WindowEvent evt) {
