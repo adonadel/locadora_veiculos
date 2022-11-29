@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -58,18 +59,6 @@ public class Main {
         if (tipoPessoa == 1) {
             tipoDocumento = "CNPJ";
         }else{
-
-            TipoCarteira[] tiposCarteira = {
-                    TipoCarteira.A,
-                    TipoCarteira.B,
-                    TipoCarteira.C,
-                    TipoCarteira.AB,
-                    TipoCarteira.ABC
-            };
-
-            TipoCarteira tipoCarteira = (TipoCarteira) JOptionPane.showInputDialog(null, "Informe o tipo da sua CNH:","Cadastrar Pessoa", JOptionPane.DEFAULT_OPTION, null, tiposCarteira, tiposCarteira[0]);
-
-
             CNH = JOptionPane.showInputDialog(null, "Informe o número da CNH da pessoa: ");
             String auxDataNasc = JOptionPane.showInputDialog(null, "Informe a data de nascimento da pessoa: (DD/MM/AAAA)");
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -123,27 +112,43 @@ public class Main {
         int menu = JOptionPane.showOptionDialog(null, "Cadastrar cliente como pessoa:",
                 "Menu Cadastros",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
+        TipoCarteira tipoCarteira;
+
+        TipoCarteira[] tiposCarteira = {
+                TipoCarteira.A,
+                TipoCarteira.B,
+                TipoCarteira.C,
+                TipoCarteira.AB,
+                TipoCarteira.ABC
+        };
 
         switch (menu) {
             case 0:
                 Pessoa pessoaFisica = chamaCadastroPessoa(0);
+
+                tipoCarteira = (TipoCarteira) JOptionPane.showInputDialog(null, "Informe o tipo da sua CNH:","Cadastrar Pessoa", JOptionPane.DEFAULT_OPTION, null, tiposCarteira, tiposCarteira[0]);
+
                 PessoaDAO.salvar(pessoaFisica);
 
                 Cliente clienteFisico = new Cliente();
                 clienteFisico.setPessoa(pessoaFisica);
                 clienteFisico.setId(ClienteDAO.getTotal() + 1);
+                clienteFisico.setTipoCarteira(tipoCarteira);
                 ClienteDAO.salvar(clienteFisico);
 
                 chamaMenuCadastros();
                 break;
             case 1:
                 Pessoa pessoaJuridica = chamaCadastroPessoa(1);
+
+                tipoCarteira = (TipoCarteira) JOptionPane.showInputDialog(null, "Informe o tipo da sua CNH:","Cadastrar Pessoa", JOptionPane.DEFAULT_OPTION, null, tiposCarteira, tiposCarteira[0]);
+
                 PessoaDAO.salvar(pessoaJuridica);
 
                 Cliente clienteJuridico = new Cliente();
                 clienteJuridico.setPessoa(pessoaJuridica);
                 clienteJuridico.setId(ClienteDAO.getTotal() + 1);
-                ClienteDAO.salvar(clienteJuridico);
+                clienteJuridico.setTipoCarteira(tipoCarteira);
                 ClienteDAO.salvar(clienteJuridico);
 
                 chamaMenuCadastros();
@@ -816,13 +821,27 @@ public class Main {
                 int pessoaId = parseInt(split[0]);
                 Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
-                TipoVeiculo[] tiposVeiculo = {
-                                    TipoVeiculo.CAMINHAO,
-                                    TipoVeiculo.CARRO,
-                                    TipoVeiculo.MOTO
-                                };
+                Cliente cliente = ClienteDAO.findClienteByPessoa(pessoa);
 
-                TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo, tiposVeiculo[0]);
+                List<TipoVeiculo> tiposVeiculo = new ArrayList<>();
+
+                if(cliente.getTipoCarteira() == TipoCarteira.A){
+                  tiposVeiculo.add(TipoVeiculo.MOTO);
+                }else if(cliente.getTipoCarteira() == TipoCarteira.B){
+                   tiposVeiculo.add(TipoVeiculo.CARRO);
+                }else if(cliente.getTipoCarteira() == TipoCarteira.C){
+                    tiposVeiculo.add(TipoVeiculo.CAMINHAO);
+                }else if(cliente.getTipoCarteira() == TipoCarteira.AB){
+                    tiposVeiculo.add(TipoVeiculo.CARRO);
+                    tiposVeiculo.add(TipoVeiculo.MOTO);
+                } else {
+                    tiposVeiculo.add(TipoVeiculo.CAMINHAO);
+                    tiposVeiculo.add(TipoVeiculo.CARRO);
+                    tiposVeiculo.add(TipoVeiculo.MOTO);
+                }
+
+
+                TipoVeiculo tipoVeiculo = (TipoVeiculo) JOptionPane.showInputDialog(null, "Seleciona o tipo do veículo: ", "Alugar veículo", JOptionPane.DEFAULT_OPTION, null, tiposVeiculo.toArray(), tiposVeiculo.get(0));
 
                 Object[] veiculos = VeiculoDAO.findVeiculosInArrayByTipoVeiculoWithId(tipoVeiculo);
                 Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
