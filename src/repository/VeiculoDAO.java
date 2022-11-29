@@ -22,16 +22,6 @@ public final class VeiculoDAO {
         return veiculos;
     }
 
-//    public static List<Veiculo> buscarPorNome(String nome) {
-//        List<Veiculo> veiculosFiltradas = new ArrayList<>();
-//        for (Veiculo veiculo : veiculos) {
-//            if (veiculo.getNome().contains(nome)) {
-//                veiculosFiltradas.add(veiculo);
-//            }
-//        }
-//        return veiculosFiltradas;
-//    }
-
     public static Object[] findVeiculosInArray() {
         List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
         List<String> veiculosNomes = new ArrayList<>();
@@ -68,9 +58,7 @@ public final class VeiculoDAO {
     public static Object[] findVeiculosInArrayByTipoVeiculoWithId(TipoVeiculo tipoVeiculo) {
         List<Veiculo> veiculos = VeiculoDAO.buscarTodos();
         List<String> veiculosNomes = new ArrayList<>();
-        System.out.println(tipoVeiculo);
         for (Veiculo veiculo : veiculos) {
-            System.out.println(veiculo.getTipo() + " - " + veiculo.isAlugado());
             if (veiculo.getTipo() == tipoVeiculo && !veiculo.isAlugado()) {
                 veiculosNomes.add(veiculo.getId() + " - " + veiculo.getModelo().getNome() + " (" + veiculo.getPlaca() + ")");
             }

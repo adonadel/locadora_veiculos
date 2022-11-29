@@ -293,7 +293,6 @@ public class Main {
             Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistros: ", "Inclusão de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
             String[] splitSinistro = nomeSinistro.toString().split(" - ");
             int sinistroId = parseInt(splitSinistro[0]);
-            System.out.println(sinistroId);
             sinistro = SinistroDAO.findSinistroById(sinistroId);
             VeiculoDAO.incluiSinistro(sinistro, veiculo);
             continuar = JOptionPane.showConfirmDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.DEFAULT_OPTION);
@@ -779,9 +778,6 @@ public class Main {
     }
 
     private static void chamaRelatorioPais() {
-        /*List<Pais> pais = getPaisDAO().buscarTodos();
-        RelatorioPaisForm.emitirRelatorio(pais);*/
-
         String listaPais = "Lista de Países";
 
         List<Pais> paises = PaisDAO.buscarTodos();
@@ -925,11 +921,7 @@ public class Main {
         }
 
         private static void chamaRelatorioAluguel() {
-            /*List<Aluguel> aluguel = getAluguelDAO().buscarTodos();
-            RelatorioAluguelForm.emitirRelatorio(aluguel);*/
-
             String listaAluguel = "";
-            //listaAluguel += "Lista de Alugueis";
 
             List<Aluguel> alugueis = AluguelDAO.buscarTodos();
 

@@ -40,12 +40,10 @@ public class Aluguel {
     }
 
     public LocalDate getDataAluguel() {
-        System.out.println(dataAluguel);
         return dataAluguel;
     }
 
     public void setDataAluguel(LocalDate dataAluguel) {
-        System.out.println(this.dataAluguel);
         this.dataAluguel = dataAluguel;
     }
 

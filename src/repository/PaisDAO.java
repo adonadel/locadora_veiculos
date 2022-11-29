@@ -23,7 +23,6 @@ public final class PaisDAO {
     }
 
     public static List<Pais> buscarTodos() {
-        System.out.println(paises);
         return paises;
     }
 

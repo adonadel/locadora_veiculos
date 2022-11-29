@@ -31,7 +31,6 @@ public final class AluguelDAO {
     }
 
     public static List<Aluguel> buscarTodos() {
-        System.out.println(alugueis);
         return alugueis;
     }
 }
