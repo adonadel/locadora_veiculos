@@ -207,7 +207,7 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "Cadastre um veículo antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
-            case 2: //eric to aqui
+            case 2:
                 try {
                     chamaMenuSinistro();
                 } catch (ArrayIndexOutOfBoundsException teste){
@@ -234,7 +234,6 @@ public class Main {
         }
     }
 
-//    aqui2
     public static void chamaMenuSinistro(){
         String[] opcoesMenuCadastro = {"Cadastrar sinistro", "Incluir em um veículo", "Remover de um veículo", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
@@ -289,6 +288,7 @@ public class Main {
             Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistros: ", "Inclusão de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
             String[] splitSinistro = nomeSinistro.toString().split(" - ");
             int sinistroId = parseInt(splitSinistro[0]);
+            System.out.println(sinistroId);
             sinistro = SinistroDAO.findSinistroById(sinistroId);
             VeiculoDAO.incluiSinistro(sinistro, veiculo);
             continuar = JOptionPane.showConfirmDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.DEFAULT_OPTION);
@@ -299,24 +299,25 @@ public class Main {
 
         Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
         Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+
         String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
         int veiculoId = parseInt(splitVeiculo[0]);
         Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
-        int continuar = 1;
+        int continuar;
         Sinistro sinistro;
         do {
-            Object[] listSinistros = SinistroDAO.findSinistrosInArray();
+            Object[] listSinistros = SinistroDAO.findSinistrosInArrayWithId();
             Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistro: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
             String[] splitSinistro = nomeSinistro.toString().split(" - ");
             int sinistroId = parseInt(splitSinistro[0]);
 
+
             sinistro = SinistroDAO.findSinistroById(sinistroId);
             VeiculoDAO.removeSinistro(sinistro, veiculo);
-            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.YES_NO_OPTION));
-        }while(continuar == 0);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja remover mais um sinistro?", "Remoçao de sinistros ", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
     }
-//-------------- kinho --------
 
     private static void chamaMenuVeiculos() {
         String[] opcoesMenuCadastro = {"Caminhão", "Carro", "Moto", "Voltar"};
@@ -516,7 +517,7 @@ public class Main {
         int veiculoId = parseInt(splitVeiculo[0]);
         Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
-        int continuar = 1;
+        int continuar;
         Adicional adicional;
         do {
             Object[] listAdicionais = AdicionalDAO.findAdicionaisInArrayWithId();
@@ -525,8 +526,8 @@ public class Main {
             int adicionalId = parseInt(splitAdicional[0]);
             adicional = AdicionalDAO.findAdicionalById(adicionalId);
             VeiculoDAO.removeAdicional(adicional, veiculo);
-            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um adicional?", "Inclusão de adicionais", JOptionPane.YES_NO_OPTION));
-        }while(continuar == 0);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja remover mais um adicional", "Remoçao de adicionais ", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
     }
 
     private static Marca chamaCadastroMarca() {

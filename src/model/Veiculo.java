@@ -144,7 +144,6 @@ public class Veiculo{
     }
 
     public void setAdicionais(Adicional adicional) {
-        System.out.println("teste");
         this.adicionais.add(adicional);
     }
 
