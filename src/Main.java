@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static java.time.temporal.ChronoUnit.*;
 
 public class Main {
      public static void main(String[] args) {
@@ -211,7 +212,7 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "Cadastre um veículo antes.", "Alerta", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
-            case 2: //eric to aqui
+            case 2:
                 try {
                     chamaMenuSinistro();
                 } catch (ArrayIndexOutOfBoundsException teste){
@@ -238,7 +239,6 @@ public class Main {
         }
     }
 
-//    aqui2
     public static void chamaMenuSinistro(){
         String[] opcoesMenuCadastro = {"Cadastrar sinistro", "Incluir em um veículo", "Remover de um veículo", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
@@ -293,6 +293,7 @@ public class Main {
             Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistros: ", "Inclusão de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
             String[] splitSinistro = nomeSinistro.toString().split(" - ");
             int sinistroId = parseInt(splitSinistro[0]);
+            System.out.println(sinistroId);
             sinistro = SinistroDAO.findSinistroById(sinistroId);
             VeiculoDAO.incluiSinistro(sinistro, veiculo);
             continuar = JOptionPane.showConfirmDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.DEFAULT_OPTION);
@@ -303,24 +304,25 @@ public class Main {
 
         Object[] veiculos = VeiculoDAO.findVeiculosInArrayWithId();
         Object nomeVeiculo = JOptionPane.showInputDialog(null, "Selecione o veículo: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, veiculos, veiculos[0]);
+
         String[] splitVeiculo = nomeVeiculo.toString().split(" - ");
         int veiculoId = parseInt(splitVeiculo[0]);
         Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
-        int continuar = 1;
+        int continuar;
         Sinistro sinistro;
         do {
-            Object[] listSinistros = SinistroDAO.findSinistrosInArray();
+            Object[] listSinistros = SinistroDAO.findSinistrosInArrayWithId();
             Object nomeSinistro = JOptionPane.showInputDialog(null, "Selecione um sinistro: ", "Remoção de sinistros", JOptionPane.QUESTION_MESSAGE, null, listSinistros, listSinistros[0]);
             String[] splitSinistro = nomeSinistro.toString().split(" - ");
             int sinistroId = parseInt(splitSinistro[0]);
 
+
             sinistro = SinistroDAO.findSinistroById(sinistroId);
             VeiculoDAO.removeSinistro(sinistro, veiculo);
-            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um sinistro?", "Inclusão de sinistros", JOptionPane.YES_NO_OPTION));
-        }while(continuar == 0);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja remover mais um sinistro?", "Remoçao de sinistros ", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
     }
-//-------------- kinho --------
 
     private static void chamaMenuVeiculos() {
         String[] opcoesMenuCadastro = {"Caminhão", "Carro", "Moto", "Voltar"};
@@ -520,7 +522,7 @@ public class Main {
         int veiculoId = parseInt(splitVeiculo[0]);
         Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
-        int continuar = 1;
+        int continuar;
         Adicional adicional;
         do {
             Object[] listAdicionais = AdicionalDAO.findAdicionaisInArrayWithId();
@@ -529,8 +531,8 @@ public class Main {
             int adicionalId = parseInt(splitAdicional[0]);
             adicional = AdicionalDAO.findAdicionalById(adicionalId);
             VeiculoDAO.removeAdicional(adicional, veiculo);
-            continuar = parseInt(JOptionPane.showInputDialog(null, "Deseja selecionar mais um adicional?", "Inclusão de adicionais", JOptionPane.YES_NO_OPTION));
-        }while(continuar == 0);
+            continuar = JOptionPane.showConfirmDialog(null, "Deseja remover mais um adicional", "Remoçao de adicionais ", JOptionPane.DEFAULT_OPTION);
+        }while(continuar == JOptionPane.YES_OPTION);
     }
 
     private static Marca chamaCadastroMarca() {
@@ -855,8 +857,8 @@ public class Main {
 
                 BigDecimal auxCalc = auxFipe.multiply(fivePercent);
                 BigDecimal auxValor = auxCalc.divide(oneHundred);
-                BigDecimal valor = auxValor.add(fifty);
-                JOptionPane.showMessageDialog(null, "O valor diario a ser pago no aluguel será de: " + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
+                BigDecimal valor = auxValor.add(fifty).setScale(2, RoundingMode.HALF_EVEN);
+                JOptionPane.showMessageDialog(null, "O valor diario a ser pago no aluguel será de: R$" + valor, "Alugar veículo", JOptionPane.INFORMATION_MESSAGE);
 
                 String auxDataAluguel = JOptionPane.showInputDialog(null, "Informe a data do aluguel: (DD/MM/AAAA)");
                 dataAluguel = LocalDate.parse(auxDataAluguel, pattern);
@@ -871,6 +873,7 @@ public class Main {
                 aluguel.setStatus(StatusAluguel.ALUGADO);
 
                 veiculo.setAlugado(true);
+                AluguelDAO.salvar(aluguel);
             }else { //devolver
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
@@ -885,6 +888,11 @@ public class Main {
                 Veiculo veiculo = VeiculoDAO.findVeiculoById(veiculoId);
 
                 aluguel = AluguelDAO.getAluguelByPessoaAndVeiculo(pessoa, veiculo);
+
+                aluguel.setDataDevolucao(LocalDate.now());
+                BigDecimal daysLocated = BigDecimal.valueOf(DAYS.between(aluguel.getDataAluguel(), aluguel.getDataDevolucao())).add(BigDecimal.valueOf(2));
+                aluguel.setValorFinal(aluguel.getValorEstimado().multiply(daysLocated).setScale(2, RoundingMode.HALF_EVEN));
+                JOptionPane.showMessageDialog(null, "O valor final foi de R$" + aluguel.getValorFinal(), "Devolver veículo", JOptionPane.INFORMATION_MESSAGE);
 
                 String[] opcoesDevolver = {"Não", "Sim"};
                 int opt = JOptionPane.showOptionDialog(null, "O condutor teve problemas durante o uso do veículo: ",
