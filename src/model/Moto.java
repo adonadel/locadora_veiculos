@@ -2,28 +2,19 @@ package model;
 
 public class Moto extends Veiculo{
 
-    private boolean compartimento;
-    private double tamanhoBox;
-
-
+    private TipoVeiculo tipo;
 
     public void Moto(){
         this.setTipo(TipoVeiculo.MOTO);
     }
 
-    public boolean isCompartimento() {
-        return compartimento;
+    @Override
+    public TipoVeiculo getTipo() {
+        return tipo;
     }
 
-    public void setCompartimento(boolean compartimento) {
-        this.compartimento = compartimento;
-    }
-
-    public double getTamanhoBox() {
-        return tamanhoBox;
-    }
-
-    public void setTamanhoBox(double tamanhoBox) {
-        this.tamanhoBox = tamanhoBox;
+    @Override
+    public void setTipo(TipoVeiculo tipo) {
+        this.tipo = tipo;
     }
 }
