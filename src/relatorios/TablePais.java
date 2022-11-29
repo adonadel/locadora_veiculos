@@ -10,6 +10,7 @@ public class TablePais extends AbstractTableModel{
 
         public static final int INDEX_ID = 0;
         public static final int INDEX_NOME = 1;
+        public static final int INDEX_ESCONDIDO = 2;
 
         protected String[] nomeColunas;
         protected Vector<Pais> vetorDados;
@@ -22,6 +23,15 @@ public class TablePais extends AbstractTableModel{
         @Override
         public String getColumnName(int column) {
             return nomeColunas[column];
+        }
+
+        @Override
+        public boolean isCellEditable(int linha, int coluna) {
+            if (coluna == INDEX_ESCONDIDO) {
+                return false;
+            } else {
+                return true;
+            }
         }
 
         @Override

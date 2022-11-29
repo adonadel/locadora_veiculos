@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -22,7 +23,7 @@ public class Main {
          MarcaDAO.initMarcas();
          ModeloDAO.initModelos();
     }
-       
+
     /*Pessoas e relacionados*/
     private static Pessoa chamaCadastroPessoa(int tipoPessoa) {
         String nome = JOptionPane.showInputDialog(null, "Informe o nome da pessoa: ");
@@ -66,7 +67,6 @@ public class Main {
             };
 
             TipoCarteira tipoCarteira = (TipoCarteira) JOptionPane.showInputDialog(null, "Informe o tipo da sua CNH:","Cadastrar Pessoa", JOptionPane.DEFAULT_OPTION, null, tiposCarteira, tiposCarteira[0]);
-
 
             CNH = JOptionPane.showInputDialog(null, "Informe o número da CNH da pessoa: ");
             String auxDataNasc = JOptionPane.showInputDialog(null, "Informe a data de nascimento da pessoa: (DD/MM/AAAA)");
@@ -702,9 +702,11 @@ public class Main {
 
     private static Pais chamaCadastroPais() {
         Pais pais = new Pais();
+
         String nome = JOptionPane.showInputDialog(null, "Informe o nome do país: ");
         pais.setId(PaisDAO.getTotal() + 1);
         pais.setNome(nome);
+
         return pais;
     }
 
@@ -716,8 +718,10 @@ public class Main {
         Object[] nomesPaises = PaisDAO.findPaisesInArrayWithId();
         Object nomePais = JOptionPane.showInputDialog(null, "Selecione o país: ", "Cadastro de estado", JOptionPane.QUESTION_MESSAGE, null, nomesPaises, nomesPaises[0]);
         String[] split = nomePais.toString().split(" - ");
+
         int paisId = parseInt(split[0]);
         Pais pais = PaisDAO.findPaisById(paisId);
+
         estado.setId(UfDAO.getTotal() + 1);
         estado.setNome(nome);
         estado.setPais(pais);
@@ -733,9 +737,11 @@ public class Main {
         String[] split = nomeUf.toString().split(" - ");
         int ufId = parseInt(split[0]);
         Uf Uf = UfDAO.findUfById(ufId);
+
         cidade.setId(CidadeDAO.getTotal() + 1);
         cidade.setNome(nome);
         cidade.setUf(Uf);
+
         return cidade;
     }
 
@@ -748,7 +754,7 @@ public class Main {
         switch (menu) {
             case 0:
                 chamaRelatorioPais();
-                //chamaMenuRelatorioEnderecos();
+                chamaMenuRelatorioEnderecos();
                 break;
             case 1:
                 chamaRelatorioUf();
@@ -765,20 +771,27 @@ public class Main {
     }
 
     private static void chamaRelatorioPais() {
-        List<Pais> pais = getPaisDAO().buscarTodos();
-        RelatorioPaisForm.emitirRelatorio(pais);
+        /*List<Pais> pais = getPaisDAO().buscarTodos();
+        RelatorioPaisForm.emitirRelatorio(pais);*/
+
+        String listaPais = "Lista de Países";
+
+        List<Pais> paises = PaisDAO.buscarTodos();
+
+        for (Pais pais : paises) {
+            listaPais += "\n" + pais.getId() + " - " + pais.getNome();
+        }
+
+        JOptionPane.showMessageDialog(null, listaPais);
     }
 
     private static void chamaRelatorioUf() {
-
-        String listaUf = "";
+        String listaUf = "Lista de estados";
 
         List<Uf> ufs = UfDAO.buscarTodos();
 
-        listaUf += "Lista de estados";
-
         for (Uf uf : ufs) {
-            listaUf += "\n" + uf.getId() + " - " + uf.getNome() + "sigla: " + uf.getSigla() + " pais: " + uf.getPais().getNome();
+            listaUf += "\n" + uf.getId() + " - " + uf.getNome() + " Sigla: " + uf.getSigla() + " País: " + uf.getPais().getNome();
         }
 
         JOptionPane.showMessageDialog(null, listaUf);
@@ -786,14 +799,14 @@ public class Main {
 
     private static void chamaRelatorioCidade() {
 
-        String listaCidade = "";
+        String listaCidade = "Lista de Cidades";
 
         List<Cidade> cidades = CidadeDAO.buscarTodos();
 
-        listaCidade += "Lista de cidades";
-
         for (Cidade cidade : cidades) {
-            listaCidade += "\n" + cidade.getId() + " - " + cidade.getNome() + " estado: " + cidade.getUf().getNome() + " pais: " + cidade.getUf().getPais().getNome();
+            listaCidade += "\n" + cidade.getId() + " - " + cidade.getNome()
+                         + " Estado: " + cidade.getUf().getNome()
+                         + " País: "   + cidade.getUf().getPais().getNome();
         }
 
         JOptionPane.showMessageDialog(null, listaCidade);
@@ -804,12 +817,13 @@ public class Main {
         private static Aluguel chamaCadastroAluguel(int type) {
             DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             Aluguel aluguel;
-            LocalDate dataAluguel = null;
+            LocalDate dataAluguel = null, dataDevolucao = null;
 
-            if (type == 1) { //alugar
+            if (type == 1) { //alugar*/
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
                 String[] split = nomePessoa.toString().split(" - ");
+
                 int pessoaId = parseInt(split[0]);
                 Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
 
@@ -843,6 +857,7 @@ public class Main {
 
                 aluguel = new Aluguel();
 
+                aluguel.setId(AluguelDAO.getTotal() + 1);
                 aluguel.setPessoa(pessoa);
                 aluguel.setVeiculo(veiculo);
                 aluguel.setDataAluguel(dataAluguel);
@@ -851,6 +866,9 @@ public class Main {
                 aluguel.setStatus(StatusAluguel.ALUGADO);
 
                 veiculo.setAlugado(true);
+                AluguelDAO.salvar(aluguel);
+                return aluguel;
+
             }else { //devolver
                 Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
                 Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
@@ -866,6 +884,11 @@ public class Main {
 
                 aluguel = AluguelDAO.getAluguelByPessoaAndVeiculo(pessoa, veiculo);
 
+                String auxDataDevol = JOptionPane.showInputDialog(null, "Informe a data de Devolução: (DD/MM/AAAA)");
+                dataDevolucao = LocalDate.parse(auxDataDevol, pattern);
+
+                aluguel.setDataDevolucao(dataDevolucao);
+
                 String[] opcoesDevolver = {"Não", "Sim"};
                 int opt = JOptionPane.showOptionDialog(null, "O condutor teve problemas durante o uso do veículo: ",
                 "Devolver veículo",
@@ -875,14 +898,33 @@ public class Main {
                 }
 
                 veiculo.setAlugado(false);
+                return aluguel;
             }
-
-            return aluguel;
         }
 
-        private static void chamaMenuRelatorioAluguel() {
-            List<Aluguel> aluguel = AluguelDAO.buscarTodos();
-            RelatorioAluguelForm.emitirRelatorio(aluguel);
+        private static void chamaRelatorioAluguel() {
+            /*List<Aluguel> aluguel = getAluguelDAO().buscarTodos();
+            RelatorioAluguelForm.emitirRelatorio(aluguel);*/
+
+            String listaAluguel = "";
+            //listaAluguel += "Lista de Alugueis";
+
+            List<Aluguel> alugueis = AluguelDAO.buscarTodos();
+
+            for (Aluguel aluguel : alugueis) {
+                listaAluguel += "Informações Aluguel - " + aluguel.getId()
+                              + "\n - Data Aluguel: " + aluguel.getDataAluguel()
+                              + "\n - Data Devolução: " + aluguel.getDataDevolucao()
+                              + "\n - Pessoa: " + aluguel.getPessoa().getNome()
+                              + "\n - Status " + aluguel.getStatus()
+                              + "\n - Veículo " + aluguel.getVeiculo().getId()
+                              + "\n - Hod. Inicial: " + aluguel.getHodometroInicial()
+                              + "\n - Hod. Final: " + aluguel.getHodometroFinal()
+                              + "\n - Valor Estimado: " + aluguel.getValorEstimado()
+                              + "\n - Valor Final: " + aluguel.getValorFinal()
+                              + "\n\n";
+            }
+            JOptionPane.showMessageDialog(null, listaAluguel, "Lista de Alugueis", JOptionPane.INFORMATION_MESSAGE,null);
         }
     /* Aluguel*/
 
@@ -946,15 +988,15 @@ public class Main {
 
                     chamaMenuEnderecosERelacionados();
                 }
-                chamaMenuCadastros();
+                //chamaMenuCadastros();
                 break;
             case 2://veículos e relacionados
                 chamaMenuVeiculosERelacionados();
-                chamaMenuCadastros();
+                //chamaMenuCadastros();
                 break;
             case 3: //endereço e relacionados
                 chamaMenuEnderecosERelacionados();
-                chamaMenuPrincipal();
+                //chamaMenuPrincipal();
                 break;
             case 4: //Voltar
                 chamaMenuPrincipal();
@@ -1004,10 +1046,10 @@ public class Main {
                 break;
             case 3: //Endereços
                 chamaMenuRelatorioEnderecos();
-                //chamaMenuRelatorios();
+                chamaMenuRelatorios();
                 break;
             case 4: //Aluguel
-                chamaMenuRelatorioAluguel();
+                chamaRelatorioAluguel();
                 chamaMenuRelatorios();
                 break;
             case 5: //Voltar
@@ -1026,7 +1068,6 @@ public class Main {
             JOptionPane.showMessageDialog(null, "Senha incorreta!");
             checaSenhaUsuario(usuarioLogado);
         }
-
     }
 
     private static Object chamaSelecaoUsuario() {
@@ -1041,5 +1082,10 @@ public class Main {
     public static PaisDAO getPaisDAO() {
         PaisDAO paisDAO = new PaisDAO();
         return paisDAO;
+    }
+
+    public static AluguelDAO getAluguelDAO() {
+        AluguelDAO aluguelDAO = new AluguelDAO();
+        return aluguelDAO;
     }
 }
