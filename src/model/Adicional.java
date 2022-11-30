@@ -1,8 +1,6 @@
 package model;
 
-import java.math.BigDecimal;
-
-public class Adicional {
+public class  Adicional {
     private long id;
     private String nome;
     private String descricao;

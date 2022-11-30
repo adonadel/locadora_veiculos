@@ -51,6 +51,17 @@ public final class ClienteDAO {
         return null;
     }
 
+    public static Object[] findClientesInArrayWithId() {
+        List<Cliente> clientes = ClienteDAO.buscarTodos();
+        List<String> clientesNomes = new ArrayList<>();
+
+        for (Cliente cliente : clientes) {
+            clientesNomes.add(cliente.getId() + " - " + cliente.getPessoa().getNome());
+        }
+
+        return clientesNomes.toArray();
+    }
+
     public static int getTotal() {
         return total;
     }

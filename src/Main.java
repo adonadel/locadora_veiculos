@@ -159,7 +159,7 @@ public class Main {
         }
     }
 
-    private static void chamaRelatorioPessoa(int tipoPessoa) { // tipoPessoa = Funcionario / cliente
+    private static void chamaRelatorioPessoa(int tipoPessoa) {
 
         String listaPessoas = "";
         if (tipoPessoa == 1) {
@@ -182,9 +182,8 @@ public class Main {
 
         JOptionPane.showMessageDialog(null, listaPessoas);
     }
-    /*Pessoas e relacionados*/
 
-    /*Veículos e relacionados*/
+
     private static void chamaMenuVeiculosERelacionados() {
         String[] opcoesMenuCadastro = {"Cadastrar veículo", "Adicionais", "Sinistro",  "Marca", "Modelo", "Voltar"};
         int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
@@ -574,9 +573,9 @@ public class Main {
     }
 
     private static void chamaMenuRelatorioVeiculosERelacionados() {
-        String[] opcoesMenu = {"Cadastrar veículo", "Adicionais", "Marca", "Modelo", "Voltar"};
-        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
-                "Menu veículos e relacionados",
+        String[] opcoesMenu = {"Veículos", "Adicionais", "Marcas", "Modelos", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha o relatório desejado: ",
+                "Menu relatórios de veículos e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenu, opcoesMenu[0]);
 
         switch (menu) {
@@ -654,7 +653,7 @@ public class Main {
 
         List<Marca> marcas = MarcaDAO.buscarTodos();
 
-        listaMarcas += "Lista de marcas";
+        listaMarcas += "Lista de Marcas";
 
         for (Marca marca : marcas) {
             listaMarcas += "\n" + marca.getId() + " - " + marca.getNome();
@@ -668,7 +667,7 @@ public class Main {
     private static void chamaMenuEnderecosERelacionados() {
 
         String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
-        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
+        int menu = JOptionPane.showOptionDialog(null, "(Cadastro)Escolha uma opção: ",
                 "Menu Endereços e relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
 
@@ -753,9 +752,9 @@ public class Main {
     }
 
     private static void chamaMenuRelatorioEnderecos() {
-        String[] opcoesMenuCadastro = {"Pais", "Estado", "Cidade", "Voltar"};
-        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção: ",
-                "Menu Endereços e relacionados",
+        String[] opcoesMenuCadastro = {"Paises", "Estados", "Cidades", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção de relatório: ",
+                "Relatórios Endereços e Relacionados",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuCadastro, opcoesMenuCadastro[0]);
 
         switch (menu) {
@@ -795,7 +794,7 @@ public class Main {
         List<Uf> ufs = UfDAO.buscarTodos();
 
         for (Uf uf : ufs) {
-            listaUf += "\n" + uf.getId() + " - " + uf.getNome() + " Sigla: " + uf.getSigla() + " País: " + uf.getPais().getNome();
+            listaUf += "\n" + uf.getId() + " - " + uf.getNome() + " Sigla: " + uf.getSigla() + " || País: " + uf.getPais().getNome();
         }
 
         JOptionPane.showMessageDialog(null, listaUf);
@@ -809,8 +808,9 @@ public class Main {
 
         for (Cidade cidade : cidades) {
             listaCidade += "\n" + cidade.getId() + " - " + cidade.getNome()
-                         + " Estado: " + cidade.getUf().getNome()
-                         + " País: "   + cidade.getUf().getPais().getNome();
+                         + " || Estado: " + cidade.getUf().getNome()
+                         + " || País: "   + cidade.getUf().getPais().getNome();
+
         }
 
         JOptionPane.showMessageDialog(null, listaCidade);
@@ -824,8 +824,8 @@ public class Main {
             LocalDate dataAluguel = null, dataDevolucao = null;
 
             if (type == 1) { //alugar*/
-                Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
-                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
+                Object[] nomesClientes = ClienteDAO.findClientesInArrayWithId();
+                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Alugar veículo", JOptionPane.QUESTION_MESSAGE, null, nomesClientes, nomesClientes[0]);
                 String[] split = nomePessoa.toString().split(" - ");
 
                 int pessoaId = parseInt(split[0]);
@@ -888,8 +888,8 @@ public class Main {
                 return aluguel;
 
             }else { //devolver
-                Object[] nomesPessoas = PessoaDAO.findPessoasInArrayWithId();
-                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesPessoas, nomesPessoas[0]);
+                Object[] nomesClientes = ClienteDAO.findClientesInArrayWithId();
+                Object nomePessoa = JOptionPane.showInputDialog(null, "Informe o locador: ", "Devolver veículo", JOptionPane.QUESTION_MESSAGE, null, nomesClientes, nomesClientes[0]);
                 String[] split = nomePessoa.toString().split(" - ");
                 int pessoaId = parseInt(split[0]);
                 Pessoa pessoa = PessoaDAO.findPessoaById(pessoaId);
@@ -902,6 +902,10 @@ public class Main {
 
                 aluguel = AluguelDAO.getAluguelByPessoaAndVeiculo(pessoa, veiculo);
 
+                long hodometroFinal = Long.parseLong(JOptionPane.showInputDialog(null, "Dígite o hodometro do veículo: ", "Hodometro final", JOptionPane.QUESTION_MESSAGE));
+
+                aluguel.setHodometroFinal(hodometroFinal);
+
                 aluguel.setDataDevolucao(LocalDate.now());
                 BigDecimal daysLocated = BigDecimal.valueOf(DAYS.between(aluguel.getDataAluguel(), aluguel.getDataDevolucao())).add(BigDecimal.valueOf(2));
                 aluguel.setValorFinal(aluguel.getValorEstimado().multiply(daysLocated).setScale(2, RoundingMode.HALF_EVEN));
@@ -912,6 +916,17 @@ public class Main {
                 "Devolver veículo",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesDevolver, opcoesDevolver[0]);
                 if (opt == 0) {
+                    aluguel.setStatus(StatusAluguel.DESALUGADO);
+                } else {
+                    TipoProblema tipoProblema;
+
+                    TipoProblema[] tiposProblema = {
+                        TipoProblema.MECANICO,
+                        TipoProblema.QUALIDADE,
+                        TipoProblema.TERCEIROS,
+                        TipoProblema.ODORES
+                    };
+                    tipoProblema = (TipoProblema) JOptionPane.showInputDialog(null, "Selecione o tipo do problema: ", "Problemas durante o aluguel", JOptionPane.DEFAULT_OPTION, null, tiposProblema, tiposProblema[0]);
                     aluguel.setStatus(StatusAluguel.DESALUGADO);
                 }
 
@@ -926,17 +941,29 @@ public class Main {
             List<Aluguel> alugueis = AluguelDAO.buscarTodos();
 
             for (Aluguel aluguel : alugueis) {
-                listaAluguel += "Informações Aluguel - " + aluguel.getId()
-                              + "\n - Data Aluguel: " + aluguel.getDataAluguel()
-                              + "\n - Data Devolução: " + aluguel.getDataDevolucao()
-                              + "\n - Pessoa: " + aluguel.getPessoa().getNome()
-                              + "\n - Status " + aluguel.getStatus()
-                              + "\n - Veículo " + aluguel.getVeiculo().getId()
-                              + "\n - Hod. Inicial: " + aluguel.getHodometroInicial()
-                              + "\n - Hod. Final: " + aluguel.getHodometroFinal()
-                              + "\n - Valor Estimado: " + aluguel.getValorEstimado()
-                              + "\n - Valor Final: " + aluguel.getValorFinal()
-                              + "\n\n";
+                DateTimeFormatter pattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                if (aluguel.getValorFinal() == null){
+                    listaAluguel += "Informações Aluguel - " + aluguel.getId()
+                            + "\n - Data Aluguel: " + pattern.format(aluguel.getDataAluguel())
+                            + "\n - Pessoa: " + aluguel.getPessoa().getNome()
+                            + "\n - Status " + aluguel.getStatus()
+                            + "\n - Veículo " + aluguel.getVeiculo().getId()
+                            + "\n - Hod. Inicial: " + aluguel.getHodometroInicial()
+                            + "\n - Valor Diário: " + aluguel.getValorEstimado()
+                            + "\n\n";
+                } else {
+                    listaAluguel += "Informações Aluguel - " + aluguel.getId()
+                            + "\n - Data Aluguel: " + pattern.format(aluguel.getDataAluguel())
+                            + "\n - Data Devolução: " + pattern.format(aluguel.getDataDevolucao())
+                            + "\n - Pessoa: " + aluguel.getPessoa().getNome()
+                            + "\n - Status " + aluguel.getStatus()
+                            + "\n - Veículo " + aluguel.getVeiculo().getId()
+                            + "\n - Hod. Inicial: " + aluguel.getHodometroInicial()
+                            + "\n - Hod. Final: " + aluguel.getHodometroFinal()
+                            + "\n - Valor Diário: " + aluguel.getValorEstimado()
+                            + "\n - Valor Final: " + aluguel.getValorFinal()
+                            + "\n\n";
+                }
             }
             JOptionPane.showMessageDialog(null, listaAluguel, "Lista de Alugueis", JOptionPane.INFORMATION_MESSAGE,null);
         }
@@ -993,7 +1020,6 @@ public class Main {
                     Pessoa pessoaFisica = chamaCadastroPessoa(1);
                     PessoaDAO.salvar(pessoaFisica);
                     Funcionario funcionario = chamaCadastroFuncionario(pessoaFisica);
-                    FuncionarioDAO.salvar(funcionario);
                 }else{
                     JOptionPane.showMessageDialog(null, "Cadastre um país para poder cadastrar um funcinário", "Menu cadastros", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1040,8 +1066,8 @@ public class Main {
     }
 
     public static void chamaMenuRelatorios() {
-        String[] opcoesMenuProcesso = {"Cliente", "Funcionário", "Veículo", "Endereço", "Aluguel", "Voltar"};
-        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção:",
+        String[] opcoesMenuProcesso = {"Clientes", "Funcionários", "Veículos e relacionados", "Endereço", "Aluguéis", "Voltar"};
+        int menu = JOptionPane.showOptionDialog(null, "Escolha uma opção de relatório:",
                 "Menu Relatórios",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, opcoesMenuProcesso, opcoesMenuProcesso[0]);
 
